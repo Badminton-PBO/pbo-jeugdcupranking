@@ -45,6 +45,6 @@ public class Match {
 
     private int roundnr;
 
-    private Date date;
+    private Draw draw;
 
 }

@@ -2,8 +2,10 @@ package be.pbo.jeugdcup.ranking;
 
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.domain.Poule;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
+import be.pbo.jeugdcup.ranking.services.PouleService;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,6 +23,9 @@ public class RankingGenerator {
         tpRepository = new TpRepositoryImpl(this.filePath);
         final List<Player> players = tpRepository.getPlayers();
         final List<Match> matches = tpRepository.getMatches();
+
+        final PouleService pouleService = new PouleService(matches);
+        final List<Poule> poules = pouleService.getPoules();
 
         final List<Match> rr = matches.stream().filter(matchWithMemberId("50828320")).collect(Collectors.toList());
 

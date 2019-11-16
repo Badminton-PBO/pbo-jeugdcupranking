@@ -19,7 +19,7 @@ class PouleTest {
 
     @Test
     public void isValidWhenAllMatchersAreIn() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
@@ -34,7 +34,7 @@ class PouleTest {
 
     @Test
     public void isInValidWhenAllMatchersAreIn() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
@@ -48,7 +48,7 @@ class PouleTest {
 
     @Test
     public void getAllTeams() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
@@ -71,7 +71,7 @@ class PouleTest {
 
     @Test
     public void sortByNumberOfWonMatches_1() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
@@ -90,7 +90,7 @@ class PouleTest {
 
     @Test
     public void sortByNumberOfWonMatches_2() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
@@ -110,7 +110,7 @@ class PouleTest {
 
     @Test
     public void sortByNumberOfWonMatches_3() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S0_21, S0_21, null),
@@ -130,7 +130,7 @@ class PouleTest {
 
     @Test
     public void whenTwoTeamsWonEqualNumberOfMatches() {
-        draw = createDraw(DrawType.POULE, 5);
+        draw = createPoule(5);
         teams = createTeams(5);
         poule = createPoule(5, Arrays.asList(
                 createMatch(1, 2, S0_21, S0_21, null),
@@ -153,7 +153,7 @@ class PouleTest {
 
     @Test
     public void whenMoreThanTwoTeamsWonEqualNumberOfMatches() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S0_21, S21_0),
@@ -173,7 +173,7 @@ class PouleTest {
 
     @Test
     public void whenMoreThan2TeamsHaveSameGameSaldo() {
-        draw = createDraw(DrawType.POULE, 4);
+        draw = createPoule(4);
         teams = createTeams(4);
         poule = createPoule(4, Arrays.asList(
                 createMatch(1, 2, S21_10, S0_21, S21_10),
@@ -204,22 +204,20 @@ class PouleTest {
     }
 
     private Poule createPoule(final int size, final List<Match> matches) {
-        final Poule myPoule = Poule.builder()
-                .draw(createDraw(DrawType.POULE, size))
-                .matches(matches)
-                .build();
+        final Poule poule = createPoule(size);
+        poule.setMatches(matches);
 
         createTeams(size);
-        return myPoule;
+        return poule;
     }
 
-    private Draw createDraw(final DrawType drawType, final int size) {
-        return Draw.builder()
-                .id(1)
-                .name("draw name")
-                .drawType(drawType)
-                .size(size)
-                .build();
+    private Poule createPoule(final int size) {
+        final Poule draw = new Poule();
+        draw.setId(1);
+        draw.setName("draw name");
+        draw.setSize(size);
+
+        return draw;
     }
 
     private List<Team> createTeams(final int size) {

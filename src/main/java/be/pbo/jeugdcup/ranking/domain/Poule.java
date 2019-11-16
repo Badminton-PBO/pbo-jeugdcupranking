@@ -1,10 +1,6 @@
 package be.pbo.jeugdcup.ranking.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,28 +9,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
-@Builder
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class Poule {
-    private List<Match> matches;
-    private Draw draw;
+public class Poule extends Draw {
 
     public Boolean isValid() {
-
-        return matches.size() > 0 && draw.getSize() > 0 && drawSizeCorrespondsWithNumberOfMatchers();
-
+        return this.getMatches().size() > 0 && this.getSize() > 0 && drawSizeCorrespondsWithNumberOfMatchers();
     }
 
     private boolean drawSizeCorrespondsWithNumberOfMatchers() {
-        final int ms = matches.size();
-        final int poolSize = draw.getSize();
+        final int ms = this.getMatches().size();
+        final int poolSize = this.getSize();
 
         return (poolSize - 1) * poolSize / 2 == ms;
     }
 
     public Set<Team> getAllTeams() {
-        return matches.stream()
+        return this.getMatches().stream()
                 .flatMap(match -> Arrays.asList(match.getTeam1(), match.getTeam2()).stream())
                 .collect(Collectors.toSet());
     }
@@ -51,16 +40,11 @@ public class Poule {
         return teams;
     }
 
-    public List<Match> wonMatchesByTeamX(final Team t) {
-        return this.getMatches().stream()
-                .filter(m -> t.equals(m.getWinner()))
-                .collect(Collectors.toList());
-    }
 
     public Team teamThatWonConfrontation(final Team t1, final Team t2) {
-        final Match match = matches.stream()
+        final Match match = this.getMatches().stream()
                 .filter(m -> m.isPlayedByTeams(t1, t2))
-                .findAny().orElseThrow(() -> new IllegalArgumentException(String.format("No match was played between %s and %s in poule %s", t1.toStringShort(), t2.toStringShort(), this.getDraw().getName())));
+                .findAny().orElseThrow(() -> new IllegalArgumentException(String.format("No match was played between %s and %s in poule %s", t1.toStringShort(), t2.toStringShort(), this.getName())));
 
         return match.getWinner();
     }
@@ -80,4 +64,49 @@ public class Poule {
                 .mapToInt(Integer::intValue)
                 .sum();
     }
+
+    public static class Builder {
+        private final Integer id;
+        private String name;
+        private Event event;
+        private int size;
+        private List<Match> matches;
+
+        public Builder(final Integer id) {
+            this.id = id;
+        }
+
+        public Builder name(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder event(final Event event) {
+            this.event = event;
+            return this;
+        }
+
+        public Builder size(final int size) {
+            this.size = size;
+            return this;
+        }
+
+        public Builder matches(final List<Match> matches) {
+            this.matches = matches;
+            return this;
+        }
+
+        public Poule build() {
+            final Poule poule = new Poule();
+            poule.setId(this.id);
+            poule.setName(this.name);
+            poule.setEvent(this.event);
+            poule.setSize(this.size);
+            poule.setMatches(this.matches);
+            return poule;
+        }
+    }
+
+
+
 }

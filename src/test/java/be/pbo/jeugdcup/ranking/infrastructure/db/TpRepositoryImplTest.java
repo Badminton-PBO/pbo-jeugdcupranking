@@ -1,12 +1,12 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
 import be.pbo.jeugdcup.ranking.domain.Draw;
-import be.pbo.jeugdcup.ranking.domain.DrawType;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.Gender;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.domain.Poule;
 import be.pbo.jeugdcup.ranking.domain.Team;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -47,12 +47,11 @@ public class TpRepositoryImplTest {
         final List<Draw> draws = tpRepository.getDraws();
         MatcherAssert.assertThat("All draws must be read", draws, Matchers.hasSize(68));
 
+
         MatcherAssert.assertThat("JE U13 A-Reeks Groep B event was found", draws,
                 Matchers.hasItem(
-                        Matchers.equalTo(Draw.builder()
-                                .id(12)
+                        Matchers.equalTo(new Poule.Builder(12)
                                 .name("JE U13 A-Reeks Groep B")
-                                .drawType(DrawType.POULE)
                                 .size(4)
                                 .event(Event.builder()
                                         .id(7)
@@ -135,10 +134,8 @@ public class TpRepositoryImplTest {
                                 .set2("21-8")
                                 .matchnr(5)
                                 .roundnr(1)
-                                .draw(Draw.builder()
-                                        .id(75)
+                                .draw(new Poule.Builder(75)
                                         .name("JD U15 Groep A")
-                                        .drawType(DrawType.POULE)
                                         .size(3)
                                         .event(Event.builder()
                                                 .id(4)

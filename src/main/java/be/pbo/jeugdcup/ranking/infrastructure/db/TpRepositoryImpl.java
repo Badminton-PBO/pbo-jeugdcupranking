@@ -1,12 +1,13 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
+import be.pbo.jeugdcup.ranking.domain.Afvalschema;
 import be.pbo.jeugdcup.ranking.domain.Draw;
-import be.pbo.jeugdcup.ranking.domain.DrawType;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.Gender;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.domain.Poule;
 import be.pbo.jeugdcup.ranking.domain.Team;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -119,13 +120,12 @@ public class TpRepositoryImpl implements TpRepository {
         final ResultSet rs = executeSql("SELECT id, name, event, drawtype, drawsize from Draw;");
         try {
             while (rs.next()) {
-                final Draw draw = Draw.builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .event(eventById.get(rs.getInt("event")))
-                        .drawType(drawToDrawType(rs.getInt("drawtype")))
-                        .size(rs.getInt("drawsize"))
-                        .build();
+                final Draw draw = toDraw(rs.getInt("drawtype"));
+                draw.setId(rs.getInt("id"));
+                draw.setName(rs.getString("name"));
+                draw.setEvent(eventById.get(rs.getInt("event")));
+                draw.setSize(rs.getInt("drawsize"));
+
                 this.drawById.put(draw.getId(), draw);
             }
         } catch (final SQLException e) {
@@ -134,12 +134,12 @@ public class TpRepositoryImpl implements TpRepository {
         return new ArrayList<>(drawById.values());
     }
 
-    private DrawType drawToDrawType(final int d) {
+    private Draw toDraw(final int d) {
         switch (d) {
             case 1:
-                return DrawType.AFVAL_SCHEMA;
+                return new Afvalschema();
             case 2:
-                return DrawType.POULE;
+                return new Poule();
             default:
                 throw new IllegalArgumentException("Unknown drawtype " + d);
         }

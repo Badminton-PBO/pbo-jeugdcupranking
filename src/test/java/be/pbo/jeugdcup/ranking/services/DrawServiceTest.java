@@ -1,5 +1,6 @@
 package be.pbo.jeugdcup.ranking.services;
 
+import be.pbo.jeugdcup.ranking.domain.Afvalschema;
 import be.pbo.jeugdcup.ranking.domain.Poule;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
@@ -29,6 +30,13 @@ class DrawServiceTest {
         final List<Poule> poules = drawService.getPoules();
         MatcherAssert.assertThat("Poules are getting extracted", poules, Matchers.hasSize(34));
         poules.forEach(p -> MatcherAssert.assertThat("Poule should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
+    }
+
+    @Test
+    void getAfvalschemas() {
+        final List<Afvalschema> afvalschemas = drawService.getAfvalschemas();
+        MatcherAssert.assertThat("Afvalschemas are getting extracted", afvalschemas, Matchers.hasSize(34));
+        afvalschemas.forEach(p -> MatcherAssert.assertThat("Afvalschema should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
     }
 
 }

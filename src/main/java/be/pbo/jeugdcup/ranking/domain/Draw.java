@@ -1,8 +1,10 @@
 package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -18,6 +20,23 @@ public abstract class Draw {
                 .filter(m -> t.equals(m.getWinner()))
                 .collect(Collectors.toList());
     }
+
+    public abstract Boolean isValid();
+
+    public Set<Team> getAllTeams() {
+        return this.getMatches().stream()
+                .flatMap(match -> Arrays.asList(match.getTeam1(), match.getTeam2()).stream())
+                .collect(Collectors.toSet());
+    }
+
+    public Team teamThatWonConfrontation(final Team t1, final Team t2) {
+        final Match match = this.getMatches().stream()
+                .filter(m -> m.isPlayedByTeams(t1, t2))
+                .findAny().orElseThrow(() -> new IllegalArgumentException(String.format("No match was played between %s and %s in poule %s", t1.toStringShort(), t2.toStringShort(), this.getName())));
+
+        return match.getWinner();
+    }
+
 
     @Override
     public boolean equals(final Object o) {

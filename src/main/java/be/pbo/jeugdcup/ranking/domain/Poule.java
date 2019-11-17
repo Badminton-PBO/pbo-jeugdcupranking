@@ -2,17 +2,15 @@ package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 public class Poule extends Draw {
 
+    @Override
     public Boolean isValid() {
-        return this.getMatches().size() > 0 && this.getSize() > 0 && drawSizeCorrespondsWithNumberOfMatchers();
+        return this.getMatches().size() > 2 && this.getSize() > 2 && drawSizeCorrespondsWithNumberOfMatchers();
     }
 
     private boolean drawSizeCorrespondsWithNumberOfMatchers() {
@@ -20,12 +18,6 @@ public class Poule extends Draw {
         final int poolSize = this.getSize();
 
         return (poolSize - 1) * poolSize / 2 == ms;
-    }
-
-    public Set<Team> getAllTeams() {
-        return this.getMatches().stream()
-                .flatMap(match -> Arrays.asList(match.getTeam1(), match.getTeam2()).stream())
-                .collect(Collectors.toSet());
     }
 
     public List<Team> getTeamsSortedByPouleResult() {
@@ -40,14 +32,6 @@ public class Poule extends Draw {
         return teams;
     }
 
-
-    public Team teamThatWonConfrontation(final Team t1, final Team t2) {
-        final Match match = this.getMatches().stream()
-                .filter(m -> m.isPlayedByTeams(t1, t2))
-                .findAny().orElseThrow(() -> new IllegalArgumentException(String.format("No match was played between %s and %s in poule %s", t1.toStringShort(), t2.toStringShort(), this.getName())));
-
-        return match.getWinner();
-    }
 
     public Integer gameSaldoByTeamX(final Team t) {
         return this.getMatches().stream()

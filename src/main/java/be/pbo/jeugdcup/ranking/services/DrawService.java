@@ -37,4 +37,7 @@ public class DrawService {
         return poules;
     }
 
+    public List<Afvalschema> getAfvalschemas() {
+        return afvalschemas;
+    }
 }

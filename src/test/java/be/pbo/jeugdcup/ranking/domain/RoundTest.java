@@ -6,22 +6,15 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-class RoundTest {
-    private Draw draw;
+public class RoundTest extends DrawTesting {
+
     private Round round;
-    private List<Team> teams;
-    private final String S21_0 = "21-0";
-    private final String S21_10 = "21-10";
-    private final String S0_21 = "0-21";
-    private final String S10_21 = "10-21";
 
     @Test
     public void isValidWhenAllMatchersAreIn() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -34,9 +27,8 @@ class RoundTest {
 
     @Test
     public void isInValidWhenAllMatchersAreIn() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -48,9 +40,8 @@ class RoundTest {
 
     @Test
     public void getAllTeams() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -71,9 +62,8 @@ class RoundTest {
 
     @Test
     public void sortByNumberOfWonMatches_1() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -90,9 +80,8 @@ class RoundTest {
 
     @Test
     public void sortByNumberOfWonMatches_2() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -110,9 +99,8 @@ class RoundTest {
 
     @Test
     public void sortByNumberOfWonMatches_3() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S0_21, S0_21, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -130,9 +118,8 @@ class RoundTest {
 
     @Test
     public void whenTwoTeamsWonEqualNumberOfMatches() {
-        draw = createPoule(5);
         teams = createTeams(5);
-        round = createPoule(5, Arrays.asList(
+        round = createRound(5, Arrays.asList(
                 createMatch(1, 2, S0_21, S0_21, null),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S21_0, null),
@@ -153,9 +140,8 @@ class RoundTest {
 
     @Test
     public void whenMoreThanTwoTeamsWonEqualNumberOfMatches() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_0, S0_21, S21_0),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S0_21, S0_21, null),
@@ -173,9 +159,8 @@ class RoundTest {
 
     @Test
     public void whenMoreThan2TeamsHaveSameGameSaldo() {
-        draw = createPoule(4);
         teams = createTeams(4);
-        round = createPoule(4, Arrays.asList(
+        round = createRound(4, Arrays.asList(
                 createMatch(1, 2, S21_10, S0_21, S21_10),
                 createMatch(1, 3, S21_0, S21_0, null),
                 createMatch(1, 4, S21_0, S0_21, S0_21),
@@ -201,79 +186,6 @@ class RoundTest {
                 teamsSortedByPouleResult.stream().map(Team::getId).collect(Collectors.toList()),
                 Matchers.contains(2, 4, 1, 3));
 
-    }
-
-    private Round createPoule(final int size, final List<Match> matches) {
-        final Round round = createPoule(size);
-        round.setMatches(matches);
-
-        createTeams(size);
-        return round;
-    }
-
-    private Round createPoule(final int size) {
-        final Round draw = new Round();
-        draw.setId(1);
-        draw.setName("draw name");
-        draw.setSize(size);
-
-        return draw;
-    }
-
-    private List<Team> createTeams(final int size) {
-        return IntStream.range(1, size + 1).boxed()
-                .map(i -> createDoubleTeam(i, String.valueOf(100 + i), String.valueOf(200 + i)))
-                .collect(Collectors.toList());
-    }
-
-    private Team teamById(final int i) {
-        return teams.stream().filter(t -> t.getId() == i).findFirst().get();
-    }
-
-    private Team createDoubleTeam(final Integer teamId, final String memberId1, final String memberId2) {
-        return Team.builder()
-                .id(teamId)
-                .player1(Player.builder()
-                        .memberId(memberId1)
-                        .firstName("firsname" + memberId1)
-                        .lastName("lastname" + memberId1)
-                        .clubName("BC4LIVE")
-                        .build())
-                .player2(Player.builder()
-                        .memberId(memberId2)
-                        .firstName("firsname" + memberId2)
-                        .lastName("lastname" + memberId2)
-                        .clubName("BC4LIVE")
-                        .build())
-                .build();
-    }
-
-    private List<Match> createPouleMatches(final Draw draw, final List<Team> teams) {
-        final List<int[]> uniqueCombinations = CombinationHelper.generate(teams.size(), 2);
-        return uniqueCombinations.stream()
-                .map(combination -> Arrays.asList(teams.get(combination[0]), teams.get(combination[1])))
-                .map(teamCombination -> Match.builder()
-                        .draw(draw)
-                        .team1(teamCombination.get(0))
-                        .team2(teamCombination.get(1))
-                        .winner(teamCombination.get(0))
-                        .build())
-                .collect(Collectors.toList());
-
-    }
-
-
-    private Match createMatch(final int team1Id, final int team2Id, final String set1, final String set2, final String set3) {
-        final Match match = Match.builder()
-                .draw(draw)
-                .team1(teamById(team1Id))
-                .team2(teamById(team2Id))
-                .set1(set1)
-                .set2(set2)
-                .set3(set3)
-                .build();
-        match.setWinner(match.getWinnerBasedOnSetResults());
-        return match;
     }
 
 }

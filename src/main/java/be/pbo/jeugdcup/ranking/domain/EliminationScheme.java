@@ -1,9 +1,12 @@
 package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 // In Dutch called 'Afvalschema'
@@ -18,9 +21,12 @@ public class EliminationScheme extends Draw {
         supportedEliminationSchemeSize.put(8, 7);
     }
 
-    public Map<Integer, List<Team>> getTeamsSortedByEliminationResult() {
-
-        return null;
+    public SortedMap<Integer, List<Team>> getTeamsSortedByEliminationResult() {
+        final TreeMap<Integer, List<Team>> result = new TreeMap<>(Comparator.reverseOrder());
+        getAllTeams().stream()
+                .collect(Collectors.groupingBy(t -> wonMatchesByTeamX(t).size()))
+                .forEach(result::put);
+        return result;
     }
 
     public List<Match> wonMatchesByTeamX(final Team t) {
@@ -37,4 +43,5 @@ public class EliminationScheme extends Draw {
                         supportedEliminationSchemeSize.get(this.getSize()).equals(getMatches().size());
 
     }
+
 }

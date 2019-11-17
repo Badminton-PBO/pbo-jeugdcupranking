@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MutualConfrontationWhenExactly2TeamsHaveEqualPointSaldoComparator implements Comparator<Team> {
-    private final Poule poule;
+    private final Round round;
     private final List<Team> teamsInScope;
 
-    public MutualConfrontationWhenExactly2TeamsHaveEqualPointSaldoComparator(final Poule poule) {
-        this.poule = poule;
-        this.teamsInScope = poule.getAllTeams().stream()
-                .collect(Collectors.groupingBy(t -> poule.pointSaldoByTeamX(t)))
+    public MutualConfrontationWhenExactly2TeamsHaveEqualPointSaldoComparator(final Round round) {
+        this.round = round;
+        this.teamsInScope = round.getAllTeams().stream()
+                .collect(Collectors.groupingBy(t -> round.pointSaldoByTeamX(t)))
                 .entrySet().stream()
                 .filter(integerListEntry -> integerListEntry.getValue().size() == 2)
                 .flatMap(integerListEntry -> integerListEntry.getValue().stream())
@@ -24,7 +24,7 @@ public class MutualConfrontationWhenExactly2TeamsHaveEqualPointSaldoComparator i
             return 0;
         }
 
-        final Team teamThatWonConfrontation = poule.teamThatWonConfrontation(t1, t2);
+        final Team teamThatWonConfrontation = round.teamThatWonConfrontation(t1, t2);
         return teamThatWonConfrontation.equals(t1) ? -1 : +1;
     }
 }

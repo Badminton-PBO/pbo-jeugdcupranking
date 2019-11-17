@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// In Dutch called 'Poule'
 @Data
-public class Poule extends Draw {
+public class Round extends Draw {
 
     @Override
     public Boolean isValid() {
@@ -80,14 +81,14 @@ public class Poule extends Draw {
             return this;
         }
 
-        public Poule build() {
-            final Poule poule = new Poule();
-            poule.setId(this.id);
-            poule.setName(this.name);
-            poule.setEvent(this.event);
-            poule.setSize(this.size);
-            poule.setMatches(this.matches);
-            return poule;
+        public Round build() {
+            final Round round = new Round();
+            round.setId(this.id);
+            round.setName(this.name);
+            round.setEvent(this.event);
+            round.setSize(this.size);
+            round.setMatches(this.matches);
+            return round;
         }
     }
 

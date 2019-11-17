@@ -2,7 +2,7 @@ package be.pbo.jeugdcup.ranking;
 
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
-import be.pbo.jeugdcup.ranking.domain.Poule;
+import be.pbo.jeugdcup.ranking.domain.Round;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
 import be.pbo.jeugdcup.ranking.services.DrawService;
@@ -25,7 +25,7 @@ public class RankingGenerator {
         final List<Match> matches = tpRepository.getMatches();
 
         final DrawService drawService = new DrawService(matches);
-        final List<Poule> poules = drawService.getPoules();
+        final List<Round> rounds = drawService.getRounds();
 
         final List<Match> rr = matches.stream().filter(matchWithMemberId("50828320")).collect(Collectors.toList());
 

@@ -1,13 +1,13 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
-import be.pbo.jeugdcup.ranking.domain.Afvalschema;
+import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
 import be.pbo.jeugdcup.ranking.domain.Draw;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.Gender;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
-import be.pbo.jeugdcup.ranking.domain.Poule;
+import be.pbo.jeugdcup.ranking.domain.Round;
 import be.pbo.jeugdcup.ranking.domain.Team;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -137,9 +137,9 @@ public class TpRepositoryImpl implements TpRepository {
     private Draw toDraw(final int d) {
         switch (d) {
             case 1:
-                return new Afvalschema();
+                return new EliminationScheme();
             case 2:
-                return new Poule();
+                return new Round();
             default:
                 throw new IllegalArgumentException("Unknown drawtype " + d);
         }

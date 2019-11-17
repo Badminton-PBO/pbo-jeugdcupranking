@@ -1,7 +1,7 @@
 package be.pbo.jeugdcup.ranking.services;
 
-import be.pbo.jeugdcup.ranking.domain.Afvalschema;
-import be.pbo.jeugdcup.ranking.domain.Poule;
+import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
+import be.pbo.jeugdcup.ranking.domain.Round;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
 import org.hamcrest.MatcherAssert;
@@ -27,16 +27,16 @@ class DrawServiceTest {
 
     @Test
     void getPoules() {
-        final List<Poule> poules = drawService.getPoules();
-        MatcherAssert.assertThat("Poules are getting extracted", poules, Matchers.hasSize(34));
-        poules.forEach(p -> MatcherAssert.assertThat("Poule should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
+        final List<Round> rounds = drawService.getRounds();
+        MatcherAssert.assertThat("Poules are getting extracted", rounds, Matchers.hasSize(34));
+        rounds.forEach(p -> MatcherAssert.assertThat("Round should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
     }
 
     @Test
-    void getAfvalschemas() {
-        final List<Afvalschema> afvalschemas = drawService.getAfvalschemas();
-        MatcherAssert.assertThat("Afvalschemas are getting extracted", afvalschemas, Matchers.hasSize(34));
-        afvalschemas.forEach(p -> MatcherAssert.assertThat("Afvalschema should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
+    void getEliminationSchemas() {
+        final List<EliminationScheme> eliminationSchemes = drawService.getEliminationSchemes();
+        MatcherAssert.assertThat("Eliminationschemes are getting extracted", eliminationSchemes, Matchers.hasSize(34));
+        eliminationSchemes.forEach(p -> MatcherAssert.assertThat("EliminationScheme should be valid " + p, p.isValid(), Matchers.equalTo(Boolean.TRUE)));
     }
 
 }

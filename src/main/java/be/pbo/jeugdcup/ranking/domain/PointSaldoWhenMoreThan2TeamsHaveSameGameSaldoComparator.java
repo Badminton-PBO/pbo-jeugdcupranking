@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PointSaldoWhenMoreThan2TeamsHaveSameGameSaldoComparator implements Comparator<Team> {
-    private final Poule poule;
+    private final Round round;
     private final List<Team> teamsInScope;
 
-    public PointSaldoWhenMoreThan2TeamsHaveSameGameSaldoComparator(final Poule poule) {
-        this.poule = poule;
-        this.teamsInScope = poule.getAllTeams().stream()
-                .collect(Collectors.groupingBy(poule::gameSaldoByTeamX))
+    public PointSaldoWhenMoreThan2TeamsHaveSameGameSaldoComparator(final Round round) {
+        this.round = round;
+        this.teamsInScope = round.getAllTeams().stream()
+                .collect(Collectors.groupingBy(round::gameSaldoByTeamX))
                 .entrySet().stream()
                 .filter(integerListEntry -> integerListEntry.getValue().size() > 2)
                 .flatMap(integerListEntry -> integerListEntry.getValue().stream())
@@ -24,6 +24,6 @@ public class PointSaldoWhenMoreThan2TeamsHaveSameGameSaldoComparator implements 
             return 0;
         }
 
-        return Integer.compare(poule.pointSaldoByTeamX(t2), poule.pointSaldoByTeamX(t1));
+        return Integer.compare(round.pointSaldoByTeamX(t2), round.pointSaldoByTeamX(t1));
     }
 }

@@ -40,7 +40,10 @@
         * name: JE U11 Poule A, JD U11 Poule 11, JE U11 1-2, ME U11
             * Reeks > Groep (soms Poule genoemd)
             * A-B-reeks kan je enkel afleiden obv. naam + drawgroup=1
-            * A-reeks en B-reeks spelen nooit tegen elkaar ... ME U17 in Lokerse
+
+            * A-reeks en B-reeks spelen nooit tegen elkaar ... zie bv. ME U17 in Lokerse
+            * "U10" = "Minibad" 
+                https://www.toernooi.nl/sport/events.aspx?id=9F8654A4-805B-428F-BE85-3FCE36EDD58D
         * event: Event.Id
         * drawtype: 2= poule, 1= afvalschema
         * drawsize: # spelers in pot
@@ -71,3 +74,23 @@
         * records van1/van2 == null of 0: links naar beide team
             * id
             * entry: Entry.id  (link naar players)
+            
+Problems
+   * Voorgeschreven indeling wordt niet altijd gevolgd
+        bv. 12 inschrijvingen maar geen A/B reeks, JE U15 en JE U13
+            https://www.toernooi.nl/sport/event.aspx?id=51A99A99-D53B-4F30-A439-558B0E605F5C&event=7 (Vlabad)
+        ook met 2 of drie inschrijvingen wordt gespeeld, worden er dan punten uitgedeeld?
+            https://www.toernooi.nl/sport/events.aspx?id=7C6F97EE-6231-4F6E-8955-8DADFE6E571A
+   * Soms aparte event per A/B reeks
+        https://www.toernooi.nl/sport/events.aspx?id=0E933C89-C4C7-4500-AEFD-0B0003133DD2 (GentseBC)
+        https://www.toernooi.nl/sport/events.aspx?id=E5AE0813-148F-444F-9F25-FC445184B2A0 (Oudegem BC)
+        https://www.toernooi.nl/sport/events.aspx?id=953E3DC3-E89C-4E34-9195-3A6AEDE7197F (Drive)
+   * ...soms niet
+        https://www.toernooi.nl/sport/events.aspx?id=9F8654A4-805B-428F-BE85-3FCE36EDD58D (Lokerse)
+   * Hoe reeks afleiden?
+                   * JE U13 B-Reeks Groep A
+                   * JE U15 REEKS B - JE U15 REEKS B 1 - 4
+                   * "Groep 1" / "Groep 2"
+        Draw name U10 == "Minibad"
+   * Poule grootte != aantal spelers 
+        "Bye" speler ? https://www.toernooi.nl/sport/draw.aspx?id=A8C1CBA3-3549-4354-A673-6694714F61B2&draw=30

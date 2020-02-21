@@ -1,6 +1,7 @@
 package be.pbo.jeugdcup.ranking.services;
 
 import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
+import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Round;
 import java.util.ArrayList;
@@ -37,7 +38,19 @@ public class DrawService {
         return rounds;
     }
 
+    public List<Round> getRounds(final Event event) {
+        return getRounds().stream()
+                .filter(r -> event.getId().equals(r.getEvent().getId()))
+                .collect(Collectors.toList());
+    }
+
     public List<EliminationScheme> getEliminationSchemes() {
         return eliminationSchemes;
+    }
+
+    public List<EliminationScheme> getEliminationSchemes(final Event event) {
+        return getEliminationSchemes().stream()
+                .filter(e -> event.getId().equals(e.getEvent().getId()))
+                .collect(Collectors.toList());
     }
 }

@@ -1,14 +1,7 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
-import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
-import be.pbo.jeugdcup.ranking.domain.Draw;
-import be.pbo.jeugdcup.ranking.domain.Event;
-import be.pbo.jeugdcup.ranking.domain.EventType;
-import be.pbo.jeugdcup.ranking.domain.Gender;
-import be.pbo.jeugdcup.ranking.domain.Match;
-import be.pbo.jeugdcup.ranking.domain.Player;
-import be.pbo.jeugdcup.ranking.domain.Round;
-import be.pbo.jeugdcup.ranking.domain.Team;
+import be.pbo.jeugdcup.ranking.domain.*;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -140,6 +133,8 @@ public class TpRepositoryImpl implements TpRepository {
                 return new EliminationScheme();
             case 2:
                 return new Round();
+            case 6:
+                return new QualificationScheme();
             default:
                 throw new IllegalArgumentException("Unknown drawtype " + d);
         }

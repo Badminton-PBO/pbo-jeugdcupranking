@@ -23,7 +23,7 @@
         * level2: PlayerLevel.id  dubbel?  
         * level3: PlayerLevel.id  mix?
         
-    * Event
+    * Event  (= 'onderdelen' op website toernooi.nl)
         * id
         * name: example JD U11, JE U17, Minibad
         * gender: 4=Jongens, 5=Meisjes, 6=minibad 
@@ -35,7 +35,7 @@
         * player1: Player.id from first/only player
         * player2: Player.id from second player   
 
-    * Draw (indeling van event in poules en afvalschema's)
+    * Draw (indeling van event in poules en afvalschema's)   (= 'schema's op website toernooi.nl)
         * id
         * name: JE U11 Poule A, JD U11 Poule 11, JE U11 1-2, ME U11
             * Reeks > Groep (soms Poule genoemd)
@@ -45,7 +45,7 @@
             * "U10" = "Minibad" 
                 https://www.toernooi.nl/sport/events.aspx?id=9F8654A4-805B-428F-BE85-3FCE36EDD58D
         * event: Event.Id
-        * drawtype: 2= poule, 1= afvalschema
+        * drawtype: 2= poule, 1= afvalschema, 6= Kwalificatieschema (bv. van 8 > 4)
         * drawsize: # spelers in pot
         * ?drawcolumns: # kolommen nodig inboomstructuur tussen beginnende teams &  winnaar, bij afvalschema met meer dan 2 spelers 
         * drawgroup:
@@ -86,8 +86,8 @@ Problems
         https://www.toernooi.nl/sport/events.aspx?id=E5AE0813-148F-444F-9F25-FC445184B2A0 (Oudegem BC)
         https://www.toernooi.nl/sport/events.aspx?id=953E3DC3-E89C-4E34-9195-3A6AEDE7197F (Drive)
    * ...soms niet
-        https://www.toernooi.nl/sport/events.aspx?id=9F8654A4-805B-428F-BE85-3FCE36EDD58D (Lokerse)
-   * Hoe reeks afleiden?
+        https://www.toernooi.nl/sport/events.aspx?id=BC61C8CB-82A4-4FE2-8222-40750FBBC2BE (Lokerse)
+   * Hoe reeks afleiden? Want er is jammer genoeg geen strikte naam-conventies
                    * JE U13 B-Reeks Groep A
                    * JE U15 REEKS B - JE U15 REEKS B 1 - 4
                    * "Groep 1" / "Groep 2"

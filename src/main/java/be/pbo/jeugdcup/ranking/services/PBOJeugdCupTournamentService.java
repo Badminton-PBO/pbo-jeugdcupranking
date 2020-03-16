@@ -3,17 +3,19 @@ package be.pbo.jeugdcup.ranking.services;
 import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.Match;
+import be.pbo.jeugdcup.ranking.domain.QualificationScheme;
 import be.pbo.jeugdcup.ranking.domain.Round;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DrawService {
+public class PBOJeugdCupTournamentService {
 
     private final List<Round> rounds = new ArrayList<>();
     private final List<EliminationScheme> eliminationSchemes = new ArrayList<>();
+    private final List<QualificationScheme> qualificationSchemes = new ArrayList<>();
 
-    public DrawService(final List<Match> matches) {
+    public PBOJeugdCupTournamentService(final List<Match> matches) {
         matches.stream()
                 .filter(match -> match.getDraw().getClass().equals(Round.class))
                 .collect(Collectors.groupingBy(match -> match.getDraw().getId()))
@@ -30,6 +32,15 @@ public class DrawService {
                     final EliminationScheme draw = (EliminationScheme) matches1.get(0).getDraw();
                     draw.setMatches(matches1);
                     eliminationSchemes.add(draw);
+                });
+
+        matches.stream()
+                .filter(match -> match.getDraw().getClass().equals(QualificationScheme.class))
+                .collect(Collectors.groupingBy(match -> match.getDraw().getId()))
+                .forEach((drawId, matches1) -> {
+                    final QualificationScheme draw = (QualificationScheme) matches1.get(0).getDraw();
+                    draw.setMatches(matches1);
+                    qualificationSchemes.add(draw);
                 });
 
     }
@@ -52,5 +63,9 @@ public class DrawService {
         return getEliminationSchemes().stream()
                 .filter(e -> event.getId().equals(e.getEvent().getId()))
                 .collect(Collectors.toList());
+    }
+
+    public List<QualificationScheme> getQualificationSchemes() {
+        return qualificationSchemes;
     }
 }

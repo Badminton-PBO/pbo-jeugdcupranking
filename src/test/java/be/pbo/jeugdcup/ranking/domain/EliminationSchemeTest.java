@@ -15,7 +15,7 @@ public class EliminationSchemeTest extends DrawTesting {
     @Test
     public void sortWhenFirstTeamOutOfTwoTeamsWon() {
         teams = createTeams(2);
-        eliminationScheme = createEliminationScheme(2, Arrays.asList(
+        eliminationScheme = createEliminationScheme(1, 2, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null)
         ));
 
@@ -28,7 +28,7 @@ public class EliminationSchemeTest extends DrawTesting {
     @Test
     public void sortWhenSecondTeamOutOfTwoTeamsWon() {
         teams = createTeams(2);
-        eliminationScheme = createEliminationScheme(2, Arrays.asList(
+        eliminationScheme = createEliminationScheme(1, 2, Arrays.asList(
                 createMatch(1, 2, S21_0, S0_21, S10_21)
         ));
 
@@ -42,7 +42,7 @@ public class EliminationSchemeTest extends DrawTesting {
     @Test
     public void sortWithFourTeams() {
         teams = createTeams(4);
-        eliminationScheme = createEliminationScheme(4, Arrays.asList(
+        eliminationScheme = createEliminationScheme(1, 4, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(3, 4, S21_0, S21_0, null),
 
@@ -58,7 +58,7 @@ public class EliminationSchemeTest extends DrawTesting {
     @Test
     public void sortWithEightTeams() {
         teams = createTeams(8);
-        eliminationScheme = createEliminationScheme(8, Arrays.asList(
+        eliminationScheme = createEliminationScheme(1, 8, Arrays.asList(
                 createMatch(1, 2, S21_0, S21_0, null),
                 createMatch(3, 4, S21_0, S21_0, null),
                 createMatch(5, 6, S21_0, S21_0, null),

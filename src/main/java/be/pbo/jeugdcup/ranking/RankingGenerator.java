@@ -4,11 +4,14 @@ import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
 import be.pbo.jeugdcup.ranking.domain.Round;
+import be.pbo.jeugdcup.ranking.domain.Team;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
-import be.pbo.jeugdcup.ranking.services.DrawService;
+import be.pbo.jeugdcup.ranking.services.PBOJeugdCupTournamentService;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+import java.util.SortedMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -26,15 +29,21 @@ public class RankingGenerator {
         final List<Player> players = tpRepository.getPlayers();
         final List<Match> matches = tpRepository.getMatches();
 
-        final DrawService drawService = new DrawService(matches);
-        final List<Round> rounds = drawService.getRounds();
+        final Optional<Match> any = matches.stream().filter(m -> m.getId().equals(241)).findAny();
+
+        final PBOJeugdCupTournamentService PBOJeugdCupTournamentService = new PBOJeugdCupTournamentService(matches);
+        final List<Round> rounds = PBOJeugdCupTournamentService.getRounds();
 
         events.forEach(e -> {
-            e.setRounds(drawService.getRounds(e));
-            e.setEliminationSchemes(drawService.getEliminationSchemes(e));
-
-
+            e.setRounds(PBOJeugdCupTournamentService.getRounds(e));
+            e.setEliminationSchemes(PBOJeugdCupTournamentService.getEliminationSchemes(e));
+            e.setQualificationSchemes(PBOJeugdCupTournamentService.getQualificationSchemes());
         });
+
+        final SortedMap<Integer, List<Team>> integerListSortedMap = events.stream()
+                .filter(e -> "JEU13".equals(e.getName()))
+                .findAny().get()
+                .generateRanking();
 
         final List<Match> rr = matches.stream().filter(matchWithMemberId("50828320")).collect(Collectors.toList());
 

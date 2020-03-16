@@ -83,6 +83,7 @@ public class TpRepositoryImplTest {
         MatcherAssert.assertThat("Match was found", matches,
                 Matchers.hasItem(
                         Matchers.equalTo(Match.builder()
+                                .id(886)
                                 .team1(Team.builder()
                                         .id(17)
                                         .player1(Player.builder()

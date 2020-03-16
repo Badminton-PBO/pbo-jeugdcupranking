@@ -30,6 +30,8 @@ public class Match {
 
     private final static Pattern PATTERN = Pattern.compile("(\\d+)[-](\\d+)");
 
+    private Integer id;
+
     private Team team1;
 
     private Team team2;

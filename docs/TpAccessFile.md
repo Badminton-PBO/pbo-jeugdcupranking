@@ -94,3 +94,8 @@ Problems
         Draw name U10 == "Minibad"
    * Poule grootte != aantal spelers 
         "Bye" speler ? https://www.toernooi.nl/sport/draw.aspx?id=A8C1CBA3-3549-4354-A673-6694714F61B2&draw=30
+        
+        
+PBO Jeugcuptoer regelement
+    * Artikel 9.7: eerste & tweede ontmoeting van de PBO Jeugdcuptour van het kalenderjaar? ->  indeling van dubbel & gemengd (Vlabad en ...)        
+    * Artikel 9.8: meerdere disciplines ingeschreven? -> enkel beste resultaat wordt behouden

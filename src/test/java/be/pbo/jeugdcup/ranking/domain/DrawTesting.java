@@ -26,10 +26,21 @@ public class DrawTesting {
         return draw;
     }
 
-    EliminationScheme createEliminationScheme(final int size) {
+
+    Event createEvent(final List<Round> rounds, final List<EliminationScheme> eliminationSchemes) {
+        final Event event = new Event();
+        event.setId(1);
+        event.setName("event name");
+        event.setRounds(rounds);
+        event.setEliminationSchemes(eliminationSchemes);
+
+        return event;
+    }
+
+    EliminationScheme createEliminationScheme(final int id, final int size) {
         final EliminationScheme draw = new EliminationScheme();
-        draw.setId(1);
-        draw.setName("draw name");
+        draw.setId(id);
+        draw.setName("draw name " + id);
         draw.setSize(size);
 
         return draw;
@@ -80,8 +91,9 @@ public class DrawTesting {
         return round;
     }
 
-    EliminationScheme createEliminationScheme(final int size, final List<Match> matches) {
-        final EliminationScheme eliminationScheme = createEliminationScheme(size);
+
+    EliminationScheme createEliminationScheme(final int id, final int size, final List<Match> matches) {
+        final EliminationScheme eliminationScheme = createEliminationScheme(id, size);
         matches.forEach(m -> m.setDraw(eliminationScheme));
         eliminationScheme.setMatches(matches);
 

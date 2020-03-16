@@ -26,6 +26,7 @@ public abstract class Draw {
     public Set<Team> getAllTeams() {
         return this.getMatches().stream()
                 .flatMap(match -> Arrays.asList(match.getTeam1(), match.getTeam2()).stream())
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 

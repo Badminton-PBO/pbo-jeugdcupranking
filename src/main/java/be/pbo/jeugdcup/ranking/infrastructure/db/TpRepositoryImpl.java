@@ -1,7 +1,15 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
-import be.pbo.jeugdcup.ranking.domain.*;
-
+import be.pbo.jeugdcup.ranking.domain.Draw;
+import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
+import be.pbo.jeugdcup.ranking.domain.Event;
+import be.pbo.jeugdcup.ranking.domain.EventType;
+import be.pbo.jeugdcup.ranking.domain.Gender;
+import be.pbo.jeugdcup.ranking.domain.Match;
+import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.domain.QualificationScheme;
+import be.pbo.jeugdcup.ranking.domain.Round;
+import be.pbo.jeugdcup.ranking.domain.Team;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -66,11 +74,11 @@ public class TpRepositoryImpl implements TpRepository {
                 + "thematch.team1set1, thematch.team2set1, thematch.team1set2, "
                 + "thematch.team2set2, thematch.team1set3, thematch.team2set3, "
                 + "hometeam.walkover, awayteam.walkover, thematch.matchnr, thematch.roundnr, "
-                + "thematch.draw, thematch.winner " + "FROM PlayerMatch thematch "
+                + "thematch.draw, thematch.winner, thematch.id " + "FROM PlayerMatch thematch "
                 + "INNER JOIN PlayerMatch AS hometeam ON thematch.van1 = hometeam.planning "
                 + "INNER JOIN PlayerMatch AS awayteam ON thematch.van2 = awayteam.planning "
                 + "AND thematch.draw = hometeam.draw AND thematch.draw = awayteam.draw " + "AND reversehomeaway=FALSE "
-                + "AND thematch.roundnr>0 	AND plandate > #2000-01-01 00:00:00#" + "ORDER BY thematch.plandate;";
+                + "AND thematch.roundnr>0 AND thematch.winner>0 " + "ORDER BY thematch.plandate;";
         try (final ResultSet rs = executeSql(query)) {
             while (rs.next()) {
                 final Match match = Match.builder()
@@ -85,6 +93,7 @@ public class TpRepositoryImpl implements TpRepository {
                         .draw(drawById.get(rs.getInt("draw")))
                         .matchnr(rs.getInt(11))
                         .roundnr(rs.getInt(12))
+                        .id(rs.getInt(15))
                         .build();
                 result.add(match);
             }

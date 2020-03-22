@@ -30,9 +30,7 @@ public class EventTest {
     public void sortTeamByEvents_JEU13() {
         event = pboJeugdCupTournament.getEvents().stream().filter(e -> "JEU13".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
-        final Map<Integer, String> collect = sortTeamsByEventResult.entrySet().stream()
-                .map(e -> Map.entry(e.getKey(), e.getValue().stream().map(Team::toStringShort).collect(Collectors.joining(","))))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "24(Senne M.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(2, "14(Kas B.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(3, "50(Thomas V.)"));
@@ -51,9 +49,7 @@ public class EventTest {
     public void sortTeamByEvents_MEU15_havingAQualificationScheme() {
         event = pboJeugdCupTournament.getEvents().stream().filter(e -> "MEU15".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
-        final Map<Integer, String> collect = sortTeamsByEventResult.entrySet().stream()
-                .map(e -> Map.entry(e.getKey(), e.getValue().stream().map(Team::toStringShort).collect(Collectors.joining(","))))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "44(Lola G.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(2, "13(Gitte B.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(3, "6(Norah E.)"));
@@ -69,13 +65,20 @@ public class EventTest {
     public void sortTeamByEvents_MEU13_onlyASingleRound() {
         event = pboJeugdCupTournament.getEvents().stream().filter(e -> "MEU13".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
-        final Map<Integer, String> collect = sortTeamsByEventResult.entrySet().stream()
-                .map(e -> Map.entry(e.getKey(), e.getValue().stream().map(Team::toStringShort).collect(Collectors.joining(","))))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "33(Lente V.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(2, "54(Julie P.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(3, "49(Lara V.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(4, "46(Carole M.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(5, "10(Josefien J.)"));
+    }
+
+    private Map<Integer, String> mapToString(final SortedMap<Integer, List<Team>> sortTeamsByEventResult) {
+        final Map<Integer, String> collect = sortTeamsByEventResult.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(Team::toStringShort).collect(Collectors.joining(","))));
+
+        return collect;
+
+
     }
 }

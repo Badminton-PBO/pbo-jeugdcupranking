@@ -1,6 +1,7 @@
 package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -28,7 +29,9 @@ public class QualificationScheme extends Draw {
             eliminationScheme.setId(CONVERT_DRAW_ID_FROM + counter.addAndGet(1));
             eliminationScheme.setName(this.getName() + " " + eliminationScheme.getId() + " (convert from QualificationScheme)");
             eliminationScheme.setEvent(this.getEvent());
-            eliminationScheme.setMatches(List.of(m));
+            List<Match> matches = new ArrayList<>();
+            matches.add(m);
+            eliminationScheme.setMatches(matches);
             eliminationScheme.setSize(2);
             m.setDraw(eliminationScheme);
 

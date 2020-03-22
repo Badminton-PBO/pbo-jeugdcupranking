@@ -1,32 +1,32 @@
 package be.pbo.jeugdcup.ranking.services;
 
 import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
+import be.pbo.jeugdcup.ranking.domain.PBOJeugdCupTournament;
 import be.pbo.jeugdcup.ranking.domain.QualificationScheme;
 import be.pbo.jeugdcup.ranking.domain.Round;
+import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-class PBOJeugdCupTournamentServiceTest {
+class PBOJeugdCupTournamentTest {
 
 
-    private static PBOJeugdCupTournamentService cutLokerse2019;
-    private static PBOJeugdCupTournamentService cutVlabad2020;
+    private static PBOJeugdCupTournament cutLokerse2019;
+    private static PBOJeugdCupTournament cutVlabad2020;
 
     @BeforeAll
     public static void init() throws URISyntaxException {
-        Path path = Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO-Jeugdcuptour-Lokerse-BC-2019.tp").toURI());
-        cutLokerse2019 = new PBOJeugdCupTournamentService(new TpRepositoryImpl(path).getMatches());
+        final TpRepository tpRepositoryLokerse2019 = new TpRepositoryImpl(Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO-Jeugdcuptour-Lokerse-BC-2019.tp").toURI()));
+        cutLokerse2019 = new PBOJeugdCupTournament(tpRepositoryLokerse2019.getPlayers(), tpRepositoryLokerse2019.getEvents(), tpRepositoryLokerse2019.getMatches(), Boolean.FALSE);
 
-        path = Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO-Jeugdcuptour-VLABAD-2020.tp").toURI());
-        cutVlabad2020 = new PBOJeugdCupTournamentService(new TpRepositoryImpl(path).getMatches());
-
+        final TpRepository tpRepositoryVlabad2020 = new TpRepositoryImpl(Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO-Jeugdcuptour-VLABAD-2020.tp").toURI()));
+        cutVlabad2020 = new PBOJeugdCupTournament(tpRepositoryVlabad2020.getPlayers(), tpRepositoryVlabad2020.getEvents(), tpRepositoryVlabad2020.getMatches(), Boolean.TRUE);
     }
 
     @Test

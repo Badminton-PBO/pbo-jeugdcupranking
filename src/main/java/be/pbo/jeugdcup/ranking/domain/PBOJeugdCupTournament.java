@@ -1,21 +1,26 @@
-package be.pbo.jeugdcup.ranking.services;
+package be.pbo.jeugdcup.ranking.domain;
 
-import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
-import be.pbo.jeugdcup.ranking.domain.Event;
-import be.pbo.jeugdcup.ranking.domain.Match;
-import be.pbo.jeugdcup.ranking.domain.QualificationScheme;
-import be.pbo.jeugdcup.ranking.domain.Round;
+import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PBOJeugdCupTournamentService {
+@Data
+public class PBOJeugdCupTournament {
 
     private final List<Round> rounds = new ArrayList<>();
     private final List<EliminationScheme> eliminationSchemes = new ArrayList<>();
     private final List<QualificationScheme> qualificationSchemes = new ArrayList<>();
 
-    public PBOJeugdCupTournamentService(final List<Match> matches) {
+    private final List<Player> players;
+    private final List<Event> events;
+    private final boolean isAlwaysUsingDoubleSchemes;
+
+    public PBOJeugdCupTournament(final List<Player> players, final List<Event> events, final List<Match> matches, final boolean isAlwaysUsingDoubleSchemes) {
+        this.players = players;
+        this.events = events;
+        this.isAlwaysUsingDoubleSchemes = isAlwaysUsingDoubleSchemes;
+
         matches.stream()
                 .filter(match -> match.getDraw().getClass().equals(Round.class))
                 .collect(Collectors.groupingBy(match -> match.getDraw().getId()))
@@ -41,12 +46,15 @@ public class PBOJeugdCupTournamentService {
                     final QualificationScheme draw = (QualificationScheme) matches1.get(0).getDraw();
                     draw.setMatches(matches1);
                     qualificationSchemes.add(draw);
+
+                    // QualificationSchemes are not part of a normal PBO Jeugdcup tour but can be converted in a List of EliminationSchemes
+                    eliminationSchemes.addAll(draw.convertToEliminationSchemes());
                 });
 
-    }
-
-    public List<Round> getRounds() {
-        return rounds;
+        events.forEach(e -> {
+            e.setRounds(this.getRounds(e));
+            e.setEliminationSchemes(this.getEliminationSchemes(e));
+        });
     }
 
     public List<Round> getRounds(final Event event) {
@@ -55,17 +63,16 @@ public class PBOJeugdCupTournamentService {
                 .collect(Collectors.toList());
     }
 
-    public List<EliminationScheme> getEliminationSchemes() {
-        return eliminationSchemes;
-    }
-
     public List<EliminationScheme> getEliminationSchemes(final Event event) {
         return getEliminationSchemes().stream()
                 .filter(e -> event.getId().equals(e.getEvent().getId()))
                 .collect(Collectors.toList());
     }
 
-    public List<QualificationScheme> getQualificationSchemes() {
-        return qualificationSchemes;
+    public List<QualificationScheme> getQualificationSchemes(final Event event) {
+        return getQualificationSchemes().stream()
+                .filter(e -> event.getId().equals(e.getEvent().getId()))
+                .collect(Collectors.toList());
+
     }
 }

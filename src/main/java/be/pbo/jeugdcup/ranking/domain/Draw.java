@@ -1,6 +1,7 @@
 package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public abstract class Draw {
     private String name;
     private Event event;
     private int size;
-    private List<Match> matches;
+    private List<Match> matches = new ArrayList<>();
 
     public List<Match> wonMatchesByTeamX(final Team t) {
         return this.getMatches().stream()

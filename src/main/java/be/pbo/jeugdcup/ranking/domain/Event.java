@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Slf4j
 public class Event {
     private Integer id;
     private String name;
@@ -27,26 +29,29 @@ public class Event {
 
     private List<Round> rounds = new ArrayList<>();
     private List<EliminationScheme> eliminationSchemes = new ArrayList<>();
-    private List<QualificationScheme> qualificationSchemes = new ArrayList<>();
 
-    public SortedMap<Integer, List<Team>> generateRanking() {
-        final TreeMap<Integer, List<Team>> result = new TreeMap<>(Comparator.reverseOrder());
-
-        if (eliminationSchemes.isEmpty() && qualificationSchemes.isEmpty() && rounds.size() == 1) {
+    // Returns teams sorted by their results for this event
+    // It's possible that not all teams play in the Elimination phase.
+    // For example: 13 inschijvingen, dubbel/gemengd -> vierde & vijfde uit poule spelen geen eindronde
+    // In that case multiple teams end at the same Event-rank and should  get equal points
+    public SortedMap<Integer, List<Team>> sortTeamsByEventResult() {
+        final TreeMap<Integer, List<Team>> result = new TreeMap<>();
+        if (rounds.isEmpty()) {
+            log.info("Event has no rounds:" + this);
+        } else if (eliminationSchemes.isEmpty() && rounds.size() == 1) {
             //Geen eindrondes, enkel 1 poule
             final List<Team> teamsSortedByPouleResult = rounds.get(0).getTeamsSortedByPouleResult();
             for (int i = 0; i < teamsSortedByPouleResult.size(); i++) {
-                result.put(i, Arrays.asList(teamsSortedByPouleResult.get(i)));
+                result.put(i + 1, Arrays.asList(teamsSortedByPouleResult.get(i)));
             }
         } else if (eliminationSchemes.size() > 0) {
+            //Sort EliminationScheme so winners scheme come in front
             eliminationSchemes.sort(new EliminationSchemeComparator(this));
 
             final AtomicInteger resultPosition = new AtomicInteger(0);
             for (final EliminationScheme eliminationScheme : eliminationSchemes) {
                 final SortedMap<Integer, List<Team>> teamsSortedByEliminationResult = eliminationScheme.getTeamsSortedByEliminationResult();
-                teamsSortedByEliminationResult.keySet().stream().sorted().forEach(k -> {
-                    result.put(resultPosition.addAndGet(1), teamsSortedByEliminationResult.get(k));
-                });
+                teamsSortedByEliminationResult.keySet().forEach(k -> result.put(resultPosition.addAndGet(1), teamsSortedByEliminationResult.get(k)));
             }
 
             //Add teams that are part of a round but did not make it into the EliminationSchemes
@@ -77,7 +82,7 @@ public class Event {
 
             return result;
         } else {
-            throw new IllegalArgumentException("Event has more than one round but no eliminationscheme.");
+            throw new IllegalArgumentException("Event has more than one round but no eliminationscheme." + this);
         }
         return result;
     }

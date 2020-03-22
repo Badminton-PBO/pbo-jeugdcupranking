@@ -52,7 +52,7 @@ public class TpRepositoryImpl implements TpRepository {
                 player.setFirstName(rs.getString("firstName"));
                 player.setLastName(rs.getString("name"));
                 player.setMemberId(rs.getString("memberId"));
-                player.setGender(rs.getInt("gender"));
+                player.setGender(playerToGender(rs.getInt("gender")));
                 result.add(player);
             }
         } catch (final SQLException e) {
@@ -98,7 +98,7 @@ public class TpRepositoryImpl implements TpRepository {
                 result.add(match);
             }
         } catch (final SQLException e) {
-            throw new RuntimeException("Unable to get players", e);
+            throw new RuntimeException("Unable to get matches", e);
         }
 
         return result;
@@ -192,10 +192,21 @@ public class TpRepositoryImpl implements TpRepository {
         }
     }
 
+    private Gender playerToGender(final Integer g) {
+        switch (g) {
+            case 1:
+                return Gender.MALE;
+            case 2:
+                return Gender.FEMALE;
+            default:
+                return Gender.UNKNOWN;
+        }
+    }
+
 
     private void fillTeams() {
         final ResultSet resultSet = executeSql("SELECT DISTINCT player1.name, player1.firstname, player1.memberid, "
-                + "player2.name, player2.firstname, player2.memberid, entry.id, club1.name, club2.name "
+                + "player2.name, player2.firstname, player2.memberid, entry.id, club1.name, club2.name, player1.gender, player2.gender "
                 + "FROM Draw INNER JOIN PlayerMatch ON Draw.id = PlayerMatch.draw "
                 + "INNER JOIN Entry ON PlayerMatch.entry = Entry.id "
                 + "INNER JOIN Player AS player1 ON Entry.player1 = player1.id "
@@ -221,6 +232,7 @@ public class TpRepositoryImpl implements TpRepository {
                     .firstName(resultSet.getString(2))
                     .memberId(resultSet.getString(3))
                     .clubName(resultSet.getString(8))
+                    .gender(playerToGender(resultSet.getInt(10)))
                     .build();
 
             Player player2 = null;
@@ -231,6 +243,7 @@ public class TpRepositoryImpl implements TpRepository {
                         .firstName(resultSet.getString(5))
                         .memberId(resultSet.getString(6))
                         .clubName(resultSet.getString(9))
+                        .gender(playerToGender(resultSet.getInt(11)))
                         .build();
             }
 

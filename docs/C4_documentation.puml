@@ -1,0 +1,52 @@
+See https://c4model.com/
+
+@startuml
+left header
+<font color=red>C4 Level 1: System context diagram</font>
+endheader
+
+actor PBO [
+<b>PBO
+(Person)
+]
+
+rectangle jeudgcupranking [
+<b>jeudgcupranking system
+---
+Software System
+---
+Allow a PBO user to process a single PBO Jeugdcup tournament (using the tp file) and receive back the
+Jeugdcup points earned by every player that participated the tournament.
+]
+
+
+PBO --> jeudgcupranking
+@enduml
+
+@startuml
+left header
+<font color=red>C4 Level 2: container diagram</font>
+endheader
+
+
+actor PBO [
+<b>PBO
+]
+
+rectangle jeudgcupranking-system {
+  cloud Azure {
+      rectangle AzureFunctions {
+        rectangle jeudgcupranking [
+            container: Java 8
+            ---
+            process a single tp-file and sync returns \nthe PBO Jeugdcup points per player
+        ]
+
+       }
+    }
+}
+
+
+PBO --> jeudgcupranking : HTTPS POST tp file \n using curl, postman,...
+
+@enduml

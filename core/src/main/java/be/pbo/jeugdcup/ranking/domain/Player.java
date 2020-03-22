@@ -14,6 +14,6 @@ public class Player {
     private String firstName;
     private String lastName;
     private String memberId;
-    private Integer gender; // 1=M, 2=V
+    private Gender gender; // 1=M, 2=V
     private String clubName;
 }

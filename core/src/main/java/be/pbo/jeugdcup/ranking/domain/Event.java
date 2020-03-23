@@ -14,21 +14,62 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
-@Builder
+@Builder(toBuilder = true, builderClassName = "EventInternalBuilder", builderMethodName = "internalBuilder")
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Slf4j
 public class Event {
+    private static final Pattern AGE_CATEGORY_PATTERN = Pattern.compile(".*(U\\d\\d)");
     private Integer id;
     private String name;
     private Gender gender;
     private EventType eventType;
+    private AgeCategory ageCategory = AgeCategory.DEFAULT_AGE_CATEGORY;
 
     private List<Round> rounds = new ArrayList<>();
     private List<EliminationScheme> eliminationSchemes = new ArrayList<>();
+
+
+    void init() {
+        if (name != null) {
+            if (name.toLowerCase().indexOf("mini") > -1) {
+                ageCategory = AgeCategory.MINIBAD;
+            }
+            final Matcher matcher = AGE_CATEGORY_PATTERN.matcher(name);
+            if (matcher.matches()) {
+                try {
+                    ageCategory = AgeCategory.valueOf(matcher.group(1));
+                } catch (final IllegalArgumentException e) {
+                    log.warn("Unable to convert Event name " + name + " into a known AgeCategory");
+                }
+            }
+
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder extends EventInternalBuilder {
+
+        Builder() {
+            super();
+        }
+
+        @Override
+        public Event build() {
+            final Event event = super.build();
+            event.init();
+            return event;
+        }
+    }
+
 
     // Returns teams sorted by their results for this event
     // It's possible that not all teams play in the Elimination phase.
@@ -86,6 +127,7 @@ public class Event {
         }
         return result;
     }
+
 
     private Set<Team> getTeams() {
         if (rounds.isEmpty()) {

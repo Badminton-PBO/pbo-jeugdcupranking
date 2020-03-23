@@ -10,12 +10,15 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.HttpResponseMessage;
 import com.microsoft.azure.functions.HttpStatus;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -58,7 +61,9 @@ public class FunctionTest {
         // Verify
         assertEquals(HttpStatus.OK, ret.getStatus());
         final String[] csvLines = ((String) ret.getBody()).split("\\r?\\n");
-        assertEquals("vblId,firstName,lastName,gender,clubName,point", csvLines[0], "Expecting correct header CSV line");
-        assertEquals(66, csvLines.length);
+        assertEquals("vblId,firstName,lastName,gender,clubName,ageCategory,point", csvLines[0], "Expecting correct header CSV line");
+        MatcherAssert.assertThat("A QualificationScheme with 8 teams and 4 matches can be converted into a List of EliminationSchemes",
+                Arrays.asList(csvLines),
+                Matchers.hasItem("50840673,Rafael,Van Den Daele,M,FLEE SHUTTLE BK,U15,55"));
     }
 }

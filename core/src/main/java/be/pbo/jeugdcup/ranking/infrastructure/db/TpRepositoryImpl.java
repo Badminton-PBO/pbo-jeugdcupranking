@@ -1,5 +1,6 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
+import be.pbo.jeugdcup.ranking.domain.AgeCategory;
 import be.pbo.jeugdcup.ranking.domain.Draw;
 import be.pbo.jeugdcup.ranking.domain.EliminationScheme;
 import be.pbo.jeugdcup.ranking.domain.Event;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class TpRepositoryImpl implements TpRepository {
 
     private final Connection connection;
+    private final Map<Integer, Player> playerById = new HashMap<>();
     private final Map<Integer, Team> teamById = new HashMap<>();
     private final Map<Integer, Event> eventById = new HashMap<>();
     private final Map<Integer, Draw> drawById = new HashMap<>();
@@ -45,29 +47,36 @@ public class TpRepositoryImpl implements TpRepository {
     }
 
     public List<Player> getPlayers() {
-        final List<Player> result = new ArrayList<>();
-        try (final ResultSet rs = executeSql("SELECT firstName, name, memberId, gender FROM Player;")) {
+        try (final ResultSet rs = executeSql("SELECT theplayer.id, theplayer.firstName, theplayer.name, theplayer.memberId, theplayer.gender, theclub.name as clubname FROM Player as theplayer " +
+                "JOIN Club as theclub on theclub.id = theplayer.club;")) {
             while (rs.next()) {
                 final Player player = new Player();
+                player.setId(rs.getInt("id"));
                 player.setFirstName(rs.getString("firstName"));
                 player.setLastName(rs.getString("name"));
                 player.setMemberId(rs.getString("memberId"));
                 player.setGender(playerToGender(rs.getInt("gender")));
-                result.add(player);
+                player.setClubName(rs.getString("clubname"));
+
+                this.playerById.put(player.getId(), player);
             }
         } catch (final SQLException e) {
             throw new RuntimeException("Unable to get players", e);
         }
-        return result;
+        return new ArrayList<>(playerById.values());
     }
 
     public List<Match> getMatches() {
-        if (teamById.isEmpty()) {
-            this.fillTeams();
+        if (playerById.isEmpty()) {
+            this.getPlayers();
         }
         if (drawById.isEmpty()) {
             this.getDraws();
         }
+        if (teamById.isEmpty()) {
+            this.fillTeams();
+        }
+
 
         final List<Match> result = new ArrayList<>();
         final String query = "SELECT hometeam.entry, awayteam.entry, "
@@ -205,14 +214,9 @@ public class TpRepositoryImpl implements TpRepository {
 
 
     private void fillTeams() {
-        final ResultSet resultSet = executeSql("SELECT DISTINCT player1.name, player1.firstname, player1.memberid, "
-                + "player2.name, player2.firstname, player2.memberid, entry.id, club1.name, club2.name, player1.gender, player2.gender "
+        final ResultSet resultSet = executeSql("SELECT DISTINCT Entry.player1 player1_id, Entry.player2 player2_id, entry.id team_id, Draw.id draw_id "
                 + "FROM Draw INNER JOIN PlayerMatch ON Draw.id = PlayerMatch.draw "
-                + "INNER JOIN Entry ON PlayerMatch.entry = Entry.id "
-                + "INNER JOIN Player AS player1 ON Entry.player1 = player1.id "
-                + "LEFT JOIN Player AS player2 ON Entry.player2 = player2.id "
-                + "LEFT JOIN Club AS club1 ON club1.id = player1.club "
-                + "LEFT JOIN Club AS club2 ON club2.id = player2.club ;");
+                + "INNER JOIN Entry ON PlayerMatch.entry = Entry.id;");
         try {
             convertTeams(resultSet);
         } catch (final SQLException e) {
@@ -223,28 +227,19 @@ public class TpRepositoryImpl implements TpRepository {
     private void convertTeams(final ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             final Team currentTeam = new Team();
-            final int teamid = resultSet.getInt(7);
+            final int teamid = resultSet.getInt("team_id");
             currentTeam.setId(teamid);
             teamById.put(teamid, currentTeam);
 
-            final Player player1 = Player.builder()
-                    .lastName(resultSet.getString(1))
-                    .firstName(resultSet.getString(2))
-                    .memberId(resultSet.getString(3))
-                    .clubName(resultSet.getString(8))
-                    .gender(playerToGender(resultSet.getInt(10)))
-                    .build();
+            final Player player1 = playerById.get(resultSet.getInt("player1_id"));
+            final Player player2 = playerById.get(resultSet.getInt("player2_id"));
 
-            Player player2 = null;
-            final String name2 = resultSet.getString(4);
-            if (name2 != null) {
-                player2 = Player.builder()
-                        .lastName(resultSet.getString(4))
-                        .firstName(resultSet.getString(5))
-                        .memberId(resultSet.getString(6))
-                        .clubName(resultSet.getString(9))
-                        .gender(playerToGender(resultSet.getInt(11)))
-                        .build();
+            final AgeCategory ageCategory = drawById.get(resultSet.getInt("draw_id")).getEvent().getAgeCategory();
+            if (ageCategory != null && ageCategory != AgeCategory.UNKNOWN) {
+                player1.setAgeCategory(ageCategory);
+                if (player2 != null) {
+                    player2.setAgeCategory(ageCategory);
+                }
             }
 
             currentTeam.setPlayer1(player1);

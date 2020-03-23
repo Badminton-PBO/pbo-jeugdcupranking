@@ -62,6 +62,7 @@ public class Function {
         resultCSV.append("lastName").append(",");
         resultCSV.append("gender").append(",");
         resultCSV.append("clubName").append(",");
+        resultCSV.append("ageCategory").append(",");
         resultCSV.append("point");
         resultCSV.append("\r\n");
         for (final Map.Entry<Player, Integer> kvp : playerIntegerMap.entrySet()) {
@@ -71,6 +72,7 @@ public class Function {
             resultCSV.append(player.getLastName()).append(",");
             resultCSV.append(player.getGender().getGenderShort()).append(",");
             resultCSV.append(player.getClubName()).append(",");
+            resultCSV.append(player.getAgeCategory().toString()).append(",");
             resultCSV.append(kvp.getValue());
             resultCSV.append("\r\n");
         }

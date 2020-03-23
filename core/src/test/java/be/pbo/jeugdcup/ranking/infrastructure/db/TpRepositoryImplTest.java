@@ -1,5 +1,6 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
+import be.pbo.jeugdcup.ranking.domain.AgeCategory;
 import be.pbo.jeugdcup.ranking.domain.Draw;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.EventType;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TpRepositoryImplTest {
@@ -69,10 +71,14 @@ public class TpRepositoryImplTest {
         MatcherAssert.assertThat("Bluey was found", players,
                 Matchers.hasItem(
                         Matchers.equalTo(Player.builder()
+                                .id(1)
                                 .firstName("Bluey")
                                 .lastName("Buseyne")
                                 .memberId("50754416")
                                 .gender(Gender.MALE)
+                                .clubName("PLUIMPLUKKERS BC")
+                                .ageCategory(AgeCategory.UNKNOWN)
+                                .eventName(new ArrayList<>())
                                 .build())));
     }
 
@@ -87,56 +93,73 @@ public class TpRepositoryImplTest {
                                 .team1(Team.builder()
                                         .id(17)
                                         .player1(Player.builder()
+                                                .id(1)
                                                 .firstName("Bluey")
                                                 .lastName("Buseyne")
                                                 .memberId("50754416")
                                                 .gender(Gender.MALE)
                                                 .clubName("PLUIMPLUKKERS BC")
+                                                .ageCategory(AgeCategory.U15)
+                                                .eventName(new ArrayList<>())
                                                 .build())
                                         .player2(Player.builder()
+                                                .id(13)
                                                 .firstName("Maurits")
                                                 .lastName("Rooselaer")
                                                 .memberId("50653644")
                                                 .gender(Gender.MALE)
                                                 .clubName("PLUIMPLUKKERS BC")
+                                                .ageCategory(AgeCategory.U15)
+                                                .eventName(new ArrayList<>())
                                                 .build())
                                         .build())
                                 .team2(Team.builder()
                                         .id(136)
                                         .player1(Player.builder()
+                                                .id(57)
                                                 .firstName("Ewout")
                                                 .lastName("Maes")
                                                 .memberId("50843192")
                                                 .gender(Gender.MALE)
                                                 .clubName("WIT-WIT BC")
+                                                .ageCategory(AgeCategory.U15)
+                                                .eventName(new ArrayList<>())
                                                 .build())
                                         .player2(Player.builder()
+                                                .id(41)
                                                 .firstName("Jasper")
                                                 .lastName("Vanden Broecke")
                                                 .memberId("50610651")
                                                 .gender(Gender.MALE)
                                                 .clubName("LOKERSE BC")
+                                                .ageCategory(AgeCategory.U15)
+                                                .eventName(new ArrayList<>())
                                                 .build())
                                         .build())
                                 .winner(
                                         Team.builder()
                                                 .id(17)
                                                 .player1(Player.builder()
+                                                        .id(1)
                                                         .firstName("Bluey")
                                                         .lastName("Buseyne")
                                                         .memberId("50754416")
                                                         .gender(Gender.MALE)
                                                         .clubName("PLUIMPLUKKERS BC")
+                                                        .ageCategory(AgeCategory.U15)
+                                                        .eventName(new ArrayList<>())
                                                         .build())
                                                 .player2(Player.builder()
+                                                        .id(13)
                                                         .firstName("Maurits")
                                                         .lastName("Rooselaer")
                                                         .memberId("50653644")
                                                         .gender(Gender.MALE)
                                                         .clubName("PLUIMPLUKKERS BC")
+                                                        .ageCategory(AgeCategory.U15)
+                                                        .eventName(new ArrayList<>())
                                                         .build())
-                                                .build()
-                                )
+                                                .build())
                                 .set1("21-12")
                                 .set2("21-8")
                                 .matchnr(5)

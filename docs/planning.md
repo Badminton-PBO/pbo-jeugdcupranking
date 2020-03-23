@@ -9,6 +9,7 @@
 
 # Eerste twee toernooien altijd zonder A/B reeks
 * add to configuration
+---> done, 2020/03/22, part of query-request
 
 # Speciale gevallen
 * indien speler uiteindelijk niet speelt (bv. ziekte), dan krijgt hij ook geen punten (ik dacht dat ik ergens gelezen had.. of was dat bij reguliere competitie)
@@ -19,6 +20,6 @@ bv LeonD, JEU13, Vlabad 2020
 * Azure functions
     * uitgeprobeerd, binary uploads werken zeker tot 13MB, lijkt voldoende
     * deployment via "az login  & mvn azure-functions:deploy"
---> ongoing
+--> done 2020/03/22
 
 # CI/CD

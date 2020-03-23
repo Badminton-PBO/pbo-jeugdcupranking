@@ -2,7 +2,7 @@
     * Club
         * id
         * name: PLUIMPLUKKERS BC
-        * clubid: 30027
+        * club: 30027
         
     * Player
         * id

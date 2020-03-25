@@ -87,7 +87,7 @@ public class TpRepositoryImpl implements TpRepository {
                 + "INNER JOIN PlayerMatch AS hometeam ON thematch.van1 = hometeam.planning "
                 + "INNER JOIN PlayerMatch AS awayteam ON thematch.van2 = awayteam.planning "
                 + "AND thematch.draw = hometeam.draw AND thematch.draw = awayteam.draw " + "AND reversehomeaway=FALSE "
-                + "AND thematch.roundnr>0 AND thematch.winner>0 " + "ORDER BY thematch.plandate;";
+                + "AND thematch.roundnr>=0 AND thematch.winner>0 " + "ORDER BY thematch.plandate;";
         try (final ResultSet rs = executeSql(query)) {
             while (rs.next()) {
                 final Match match = Match.builder()

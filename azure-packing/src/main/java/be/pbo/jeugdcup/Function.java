@@ -72,7 +72,7 @@ public class Function {
             resultCSV.append(player.getLastName()).append(",");
             resultCSV.append(player.getGender().getGenderShort()).append(",");
             resultCSV.append(player.getClubName()).append(",");
-            resultCSV.append(player.getAgeCategory().toString()).append(",");
+            resultCSV.append(player.getAgeCategory().getKey()).append(",");
             resultCSV.append(kvp.getValue());
             resultCSV.append("\r\n");
         }

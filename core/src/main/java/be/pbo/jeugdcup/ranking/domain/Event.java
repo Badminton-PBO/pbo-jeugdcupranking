@@ -14,8 +14,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
@@ -24,7 +22,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Slf4j
 public class Event {
-    private static final Pattern AGE_CATEGORY_PATTERN = Pattern.compile(".*(U\\d\\d)");
+    private static final AgeCategoryDetector ageCategoryDetector = new AgeCategoryDetector();
     private Integer id;
     private String name;
     private Gender gender;
@@ -35,21 +33,9 @@ public class Event {
     private List<EliminationScheme> eliminationSchemes = new ArrayList<>();
 
 
-    void init() {
-        if (name != null) {
-            if (name.toLowerCase().indexOf("mini") > -1) {
-                ageCategory = AgeCategory.MINIBAD;
-            }
-            final Matcher matcher = AGE_CATEGORY_PATTERN.matcher(name);
-            if (matcher.matches()) {
-                try {
-                    ageCategory = AgeCategory.valueOf(matcher.group(1));
-                } catch (final IllegalArgumentException e) {
-                    log.warn("Unable to convert Event name " + name + " into a known AgeCategory");
-                }
-            }
 
-        }
+    void init() {
+        ageCategory = ageCategoryDetector.resolveFromEventName(this.name);
     }
 
     public static Builder builder() {

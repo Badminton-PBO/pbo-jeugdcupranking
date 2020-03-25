@@ -54,8 +54,24 @@ public class Function {
         }
 
         final RankingGenerator rankingGenerator = new RankingGenerator(file.toPath(), isAlwaysUsingDoubleSchemes);
-        final Map<Player, Integer> playerIntegerMap = rankingGenerator.generate();
+        final Map<Player, Integer> playerIntegerMap;
+        try {
+            playerIntegerMap = rankingGenerator.generate();
+            final String resultCSV = convertToCSVString(playerIntegerMap);
 
+            return request.createResponseBuilder(HttpStatus.OK)
+                    .header("isAlwaysUsingDoubleSchemes", isAlwaysUsingDoubleSchemes.toString())
+                    .header("file", file.getPath())
+                    .header("fileSize", "" + bodyLength)
+                    .body(resultCSV).build();
+
+        } catch (final RuntimeException e) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Unable to generate ranking:" + e).build();
+        }
+
+    }
+
+    private String convertToCSVString(final Map<Player, Integer> playerIntegerMap) {
         final StringBuilder resultCSV = new StringBuilder();
         resultCSV.append("vblId").append(",");
         resultCSV.append("firstName").append(",");
@@ -76,13 +92,7 @@ public class Function {
             resultCSV.append(kvp.getValue());
             resultCSV.append("\r\n");
         }
-
-
-        return request.createResponseBuilder(HttpStatus.OK)
-                .header("isAlwaysUsingDoubleSchemes", isAlwaysUsingDoubleSchemes.toString())
-                .header("file", file.getPath())
-                .header("fileSize", "" + bodyLength)
-                .body(resultCSV.toString()).build();
+        return resultCSV.toString();
     }
 
 

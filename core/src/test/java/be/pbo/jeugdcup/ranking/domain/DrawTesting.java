@@ -52,6 +52,19 @@ public class DrawTesting {
                 .collect(Collectors.toList());
     }
 
+    protected List<Team> createSingleTeams(final List<Player> players) {
+        return IntStream.range(1, players.size() + 1).boxed()
+                .map(i -> createSingleTeam(i, players.get(i - 1)))
+                .collect(Collectors.toList());
+    }
+
+
+    protected List<Team> createSingleTeams(final int size) {
+        return IntStream.range(1, size + 1).boxed()
+                .map(i -> createSingleTeam(i, String.valueOf(100 + i)))
+                .collect(Collectors.toList());
+    }
+
     protected Team createDoubleTeam(final Integer teamId, final String memberId1, final String memberId2) {
         return Team.builder()
                 .id(teamId)
@@ -69,6 +82,26 @@ public class DrawTesting {
                         .build())
                 .build();
     }
+
+    protected Team createSingleTeam(final Integer teamId, final String memberId1) {
+        return Team.builder()
+                .id(teamId)
+                .player1(Player.builder()
+                        .memberId(memberId1)
+                        .firstName("firsname" + memberId1)
+                        .lastName("lastname" + memberId1)
+                        .clubName("BC4LIVE")
+                        .build())
+                .build();
+    }
+
+    protected Team createSingleTeam(final Integer teamId, final Player player) {
+        return Team.builder()
+                .id(teamId)
+                .player1(player)
+                .build();
+    }
+
 
     protected Match createMatch(final int team1Id, final int team2Id, final String set1, final String set2, final String set3) {
         final Match match = Match.builder()
@@ -103,6 +136,10 @@ public class DrawTesting {
 
     protected Team teamById(final int i) {
         return teams.stream().filter(t -> t.getId() == i).findFirst().get();
+    }
+
+    protected Team teamById(final List<Team> myTeams, final int i) {
+        return myTeams.stream().filter(t -> t.getId() == i).findFirst().get();
     }
 
     protected List<Match> createPouleMatches(final Draw draw, final List<Team> teams) {

@@ -1,5 +1,6 @@
 package be.pbo.jeugdcup.ranking.services;
 
+import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.PBOJeugdCupTournament;
 import be.pbo.jeugdcup.ranking.domain.Player;
@@ -23,6 +24,10 @@ public class PointService {
 
     public PointService(final PBOJeugdCupTournament pboJeugdCupTournament) {
         this.pboJeugdCupTournament = pboJeugdCupTournament;
+    }
+
+    public void addEventResultPerPlayer(final Event event) {
+        addEventResultPerPlayer(event.getEventType(), event.getReeks(), event.sortTeamsByEventResult());
     }
 
     public void addEventResultPerPlayer(final EventType eventType, final Reeks reeks, final SortedMap<Integer, List<Team>> teamsSortedByEventResult) {
@@ -50,17 +55,15 @@ public class PointService {
             return result;
         }
 
-        if (EventType.DOUBLE.equals(eventType) || EventType.MIX.equals(eventType) || pboJeugdCupTournament.isAlwaysUsingDoubleSchemes()) {
-            teamsSortedByEventResult.keySet().forEach(k -> {
-                final int point = k < 21 ? 100 - ((k - 1) * 5) : 0;
-                teamsSortedByEventResult.get(k).stream()
-                        .flatMap(t -> Stream.of(t.getPlayer1(), t.getPlayer2()))
-                        .filter(Objects::nonNull)
-                        .forEach(p -> result.put(p, point));
-            });
-        }
+        final int maxPointForThisEvent = (Reeks.B_REEKS.equals(reeks) && !pboJeugdCupTournament.isAlwaysUsingDoubleSchemes()) ? 97 : 100;
 
-        //TODO: singles with A/B-reeks
+        teamsSortedByEventResult.keySet().forEach(k -> {
+            final int point = k < 21 ? maxPointForThisEvent - ((k - 1) * 5) : 0;
+            teamsSortedByEventResult.get(k).stream()
+                    .flatMap(t -> Stream.of(t.getPlayer1(), t.getPlayer2()))
+                    .filter(Objects::nonNull)
+                    .forEach(p -> result.put(p, point));
+        });
 
         return result;
     }

@@ -30,7 +30,7 @@ public class RankingGenerator {
         final PBOJeugdCupTournament pboJeugdCupTournament = new PBOJeugdCupTournament(players, events, matches, isAlwaysUsingDoubleSchemes);
         final PointService pointService = new PointService(pboJeugdCupTournament);
 
-        events.forEach(e -> pointService.addEventResultPerPlayer(e.getEventType(), null, e.sortTeamsByEventResult()));
+        events.forEach(e -> pointService.addEventResultPerPlayer(e));
 
         final Map<Player, Integer> pointPerPlayer = pointService.getPointPerPlayer();
 

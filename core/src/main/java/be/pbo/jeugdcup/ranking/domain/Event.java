@@ -23,11 +23,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Event {
     private static final AgeCategoryDetector ageCategoryDetector = new AgeCategoryDetector();
+    private static final ReeksDetector reeksDetector = new ReeksDetector();
     private Integer id;
     private String name;
     private Gender gender;
     private EventType eventType;
     private AgeCategory ageCategory = AgeCategory.DEFAULT_AGE_CATEGORY;
+    private Reeks reeks = Reeks.DEFAULT_REEKS;
 
     private List<Round> rounds = new ArrayList<>();
     private List<EliminationScheme> eliminationSchemes = new ArrayList<>();
@@ -36,6 +38,7 @@ public class Event {
 
     void init() {
         ageCategory = ageCategoryDetector.resolveFromEventName(this.name);
+        reeks = reeksDetector.resolveFromEventName(this.name);
     }
 
     public static Builder builder() {

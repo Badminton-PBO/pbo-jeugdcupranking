@@ -13,6 +13,7 @@ public class DrawTesting {
     final String S21_10 = "21-10";
     final String S0_21 = "0-21";
     final String S10_21 = "10-21";
+    final String S0_0 = "0-0";
 
 
     protected List<Team> teams;

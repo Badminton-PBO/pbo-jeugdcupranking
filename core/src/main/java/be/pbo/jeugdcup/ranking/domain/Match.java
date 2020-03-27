@@ -1,10 +1,7 @@
 package be.pbo.jeugdcup.ranking.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -15,9 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Data
-@Builder
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder(toBuilder = true, builderClassName = "MatchInternalBuilder", builderMethodName = "internalBuilder")
 public class Match {
     public static final SimpleDateFormat FORMAT = new SimpleDateFormat("dd.MM HH:mm");
 
@@ -44,15 +39,38 @@ public class Match {
 
     private String set3;
 
-    private boolean walkoverTeam1;
-
-    private boolean walkoverTeam2;
+    private boolean isWalkOverMatch;
 
     private int matchnr;
 
     private int roundnr;
 
     private Draw draw;
+
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder extends MatchInternalBuilder {
+
+        Builder() {
+            super();
+        }
+
+        @Override
+        public Match build() {
+            final Match match = super.build();
+            match.setIsWalkOverMatch();
+            if (match.getTeam1() != null ) {
+                match.getTeam1().assignMatch(match);
+            }
+            if (match.getTeam2() != null) {
+                match.getTeam2().assignMatch(match);
+            }
+            return match;
+        }
+    }
 
     public Team getWinnerBasedOnSetResults() {
         final Map<Team, Long> numberOfSetsWonPerTeam = getNumberOfSetsWonPerTeam();
@@ -125,5 +143,11 @@ public class Match {
                         return team2points - team1points;
                     }
                 }).mapToInt(Integer::intValue).sum();
+    }
+
+    public void setIsWalkOverMatch() {
+        if (team1 != null && team2 != null) {
+            isWalkOverMatch = pointsSaldo(team1) == 0 && pointsSaldo(team2) == 0;
+        }
     }
 }

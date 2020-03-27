@@ -7,6 +7,7 @@ import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.Gender;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.domain.Reeks;
 import be.pbo.jeugdcup.ranking.domain.Round;
 import be.pbo.jeugdcup.ranking.domain.Team;
 import org.hamcrest.MatcherAssert;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TpRepositoryImplTest {
 
@@ -92,6 +94,7 @@ public class TpRepositoryImplTest {
                                 .id(886)
                                 .team1(Team.builder()
                                         .id(17)
+                                        .numberOfMatchesPlayedExcludingWalkOverMatches(2)
                                         .player1(Player.builder()
                                                 .id(1)
                                                 .firstName("Bluey")
@@ -115,6 +118,7 @@ public class TpRepositoryImplTest {
                                         .build())
                                 .team2(Team.builder()
                                         .id(136)
+                                        .numberOfMatchesPlayedExcludingWalkOverMatches(2)
                                         .player1(Player.builder()
                                                 .id(57)
                                                 .firstName("Ewout")
@@ -139,6 +143,7 @@ public class TpRepositoryImplTest {
                                 .winner(
                                         Team.builder()
                                                 .id(17)
+                                                .numberOfMatchesPlayedExcludingWalkOverMatches(3)
                                                 .player1(Player.builder()
                                                         .id(1)
                                                         .firstName("Bluey")
@@ -164,6 +169,7 @@ public class TpRepositoryImplTest {
                                 .set2("21-8")
                                 .matchnr(5)
                                 .roundnr(1)
+                                .isWalkOverMatch(false)
                                 .draw(new Round.Builder(75)
                                         .name("JD U15 Groep A")
                                         .size(3)
@@ -172,6 +178,8 @@ public class TpRepositoryImplTest {
                                                 .name("JD U15")
                                                 .gender(Gender.MALE)
                                                 .eventType(EventType.DOUBLE)
+                                                .ageCategory(AgeCategory.U15)
+                                                .reeks(Reeks.NA)
                                                 .build())
                                         .build())
                                 .build())));

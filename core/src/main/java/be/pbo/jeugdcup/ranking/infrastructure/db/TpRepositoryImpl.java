@@ -79,10 +79,11 @@ public class TpRepositoryImpl implements TpRepository {
 
 
         final List<Match> result = new ArrayList<>();
-        final String query = "SELECT hometeam.entry, awayteam.entry, "
-                + "thematch.team1set1, thematch.team2set1, thematch.team1set2, "
-                + "thematch.team2set2, thematch.team1set3, thematch.team2set3, "
-                + "hometeam.walkover, awayteam.walkover, thematch.matchnr, thematch.roundnr, "
+        final String query = "SELECT hometeam.entry hometeam_entry_id, awayteam.entry awayteam_entry_id, "
+                + "thematch.team1set1, thematch.team2set1, "
+                + "thematch.team1set2, thematch.team2set2, "
+                + "thematch.team1set3, thematch.team2set3, "
+                + "thematch.matchnr, thematch.roundnr, "
                 + "thematch.draw, thematch.winner, thematch.id " + "FROM PlayerMatch thematch "
                 + "INNER JOIN PlayerMatch AS hometeam ON thematch.van1 = hometeam.planning "
                 + "INNER JOIN PlayerMatch AS awayteam ON thematch.van2 = awayteam.planning "
@@ -91,18 +92,16 @@ public class TpRepositoryImpl implements TpRepository {
         try (final ResultSet rs = executeSql(query)) {
             while (rs.next()) {
                 final Match match = Match.builder()
-                        .team1(teamById.get(rs.getInt(1)))
-                        .team2(teamById.get(rs.getInt(2)))
-                        .set1(buildSet(rs, 3, 4))
-                        .set2(buildSet(rs, 5, 6))
-                        .set3(buildSet(rs, 7, 8))
-                        .walkoverTeam1(rs.getBoolean(9))
-                        .walkoverTeam2(rs.getBoolean(10))
+                        .team1(teamById.get(rs.getInt("hometeam_entry_id")))
+                        .team2(teamById.get(rs.getInt("awayteam_entry_id")))
+                        .set1(buildSet(rs, "team1set1", "team2set1"))
+                        .set2(buildSet(rs, "team1set2", "team2set2"))
+                        .set3(buildSet(rs, "team1set3", "team2set3"))
                         .winner(teamById.get(rs.getInt(rs.getInt("winner"))))
                         .draw(drawById.get(rs.getInt("draw")))
-                        .matchnr(rs.getInt(11))
-                        .roundnr(rs.getInt(12))
-                        .id(rs.getInt(15))
+                        .matchnr(rs.getInt("matchnr"))
+                        .roundnr(rs.getInt("roundnr"))
+                        .id(rs.getInt("id"))
                         .build();
                 result.add(match);
             }
@@ -113,9 +112,9 @@ public class TpRepositoryImpl implements TpRepository {
         return result;
     }
 
-    private String buildSet(final ResultSet rs, final int team1Column, final int team2Column) throws SQLException {
-        final int homePoints = rs.getInt(team1Column);
-        final int awayPoints = rs.getInt(team2Column);
+    private String buildSet(final ResultSet rs, final String team1ColumnName, final String team2ColumnName) throws SQLException {
+        final int homePoints = rs.getInt(team1ColumnName);
+        final int awayPoints = rs.getInt(team2ColumnName);
         String result = null;
         if (homePoints > 0 || awayPoints > 0) {
             result = homePoints + "-" + awayPoints;

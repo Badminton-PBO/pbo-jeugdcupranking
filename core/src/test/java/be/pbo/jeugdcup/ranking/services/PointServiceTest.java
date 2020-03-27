@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import be.pbo.jeugdcup.ranking.domain.DrawTesting;
-import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.PBOJeugdCupTournament;
 import be.pbo.jeugdcup.ranking.domain.Player;
 import be.pbo.jeugdcup.ranking.domain.Reeks;
@@ -35,11 +34,12 @@ public class PointServiceTest extends DrawTesting {
         cut = new PointService(pboJeugdCupTournament);
         final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
         teams = createTeams(3);
+        teams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(1));
         teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
         teamsSortedByEventResult.put(2, Arrays.asList(teamById(2)));
         teamsSortedByEventResult.put(3, Arrays.asList(teamById(3)));
 
-        cut.addEventResultPerPlayer(EventType.DOUBLE, null, teamsSortedByEventResult);
+        cut.addEventResultPerPlayer(null, teamsSortedByEventResult);
         final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
         MatcherAssert.assertThat("With only 3 teams, no points should be given",
                 pointPerPlayer.keySet(),
@@ -53,15 +53,34 @@ public class PointServiceTest extends DrawTesting {
         cut = new PointService(pboJeugdCupTournament);
         final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
         teams = createTeams(4);
+        teams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(1));
         teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
         teamsSortedByEventResult.put(2, Arrays.asList(teamById(2)));
         teamsSortedByEventResult.put(3, Arrays.asList(teamById(3), teamById(4)));
 
-        cut.addEventResultPerPlayer(EventType.DOUBLE, Reeks.NA, teamsSortedByEventResult);
+        cut.addEventResultPerPlayer(Reeks.NA, teamsSortedByEventResult);
         final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
         MatcherAssert.assertThat("Points should be calculcated correclty.",
                 pointPerPlayer.keySet().stream().map(p -> p.getMemberId() + "_" + pointPerPlayer.get(p)).collect(Collectors.toList()),
                 Matchers.containsInAnyOrder("101_100", "201_100", "102_95", "202_95", "103_90", "203_90", "104_90", "204_90"));
+    }
+
+    @Test
+    public void pointWhenFourDoubleTeamsAndOneTeamDidNotPlayAtAll() {
+        when(pboJeugdCupTournament.isAlwaysUsingDoubleSchemes()).thenReturn(Boolean.FALSE);
+        cut = new PointService(pboJeugdCupTournament);
+        final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
+        teams = createTeams(4);
+        teams.stream().filter(t -> t.getId() != 4).forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(2));
+        teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
+        teamsSortedByEventResult.put(2, Arrays.asList(teamById(2), teamById(3)));
+        teamsSortedByEventResult.put(3, Arrays.asList(teamById(4)));
+
+        cut.addEventResultPerPlayer(Reeks.NA, teamsSortedByEventResult);
+        final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
+        MatcherAssert.assertThat("Points should be calculcated correclty.",
+                pointPerPlayer.keySet().stream().map(p -> p.getMemberId() + "_" + pointPerPlayer.get(p)).collect(Collectors.toList()),
+                Matchers.containsInAnyOrder("101_100", "201_100", "102_95", "202_95", "103_95", "203_95", "104_0", "204_0"));
     }
 
 
@@ -71,11 +90,12 @@ public class PointServiceTest extends DrawTesting {
         cut = new PointService(pboJeugdCupTournament);
         final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
         teams = createSingleTeams(4);
+        teams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(3));
         teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
         teamsSortedByEventResult.put(2, Arrays.asList(teamById(2)));
         teamsSortedByEventResult.put(3, Arrays.asList(teamById(3), teamById(4)));
 
-        cut.addEventResultPerPlayer(EventType.SINGLE, Reeks.A_REEKS, teamsSortedByEventResult);
+        cut.addEventResultPerPlayer(Reeks.A_REEKS, teamsSortedByEventResult);
         final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
         MatcherAssert.assertThat("Points should be calculcated correclty.",
                 pointPerPlayer.keySet().stream().map(p -> p.getMemberId() + "_" + pointPerPlayer.get(p)).collect(Collectors.toList()),
@@ -89,11 +109,12 @@ public class PointServiceTest extends DrawTesting {
         cut = new PointService(pboJeugdCupTournament);
         final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
         teams = createSingleTeams(4);
+        teams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(3));
         teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
         teamsSortedByEventResult.put(2, Arrays.asList(teamById(2)));
         teamsSortedByEventResult.put(3, Arrays.asList(teamById(3), teamById(4)));
 
-        cut.addEventResultPerPlayer(EventType.SINGLE, Reeks.B_REEKS, teamsSortedByEventResult);
+        cut.addEventResultPerPlayer(Reeks.B_REEKS, teamsSortedByEventResult);
         final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
         MatcherAssert.assertThat("Points should be calculcated correclty.",
                 pointPerPlayer.keySet().stream().map(p -> p.getMemberId() + "_" + pointPerPlayer.get(p)).collect(Collectors.toList()),
@@ -107,11 +128,12 @@ public class PointServiceTest extends DrawTesting {
         cut = new PointService(pboJeugdCupTournament);
         final TreeMap<Integer, List<Team>> teamsSortedByEventResult = new TreeMap<>();
         teams = createTeams(4);
+        teams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(3));
         teamsSortedByEventResult.put(1, Arrays.asList(teamById(1)));
         teamsSortedByEventResult.put(2, Arrays.asList(teamById(2)));
         teamsSortedByEventResult.put(3, Arrays.asList(teamById(3), teamById(4)));
 
-        cut.addEventResultPerPlayer(EventType.DOUBLE, Reeks.NA, teamsSortedByEventResult);
+        cut.addEventResultPerPlayer(Reeks.NA, teamsSortedByEventResult);
 
         final Map<Player, Integer> pointPerPlayer = cut.getPointPerPlayer();
         MatcherAssert.assertThat("Points should be calculcated correclty.",
@@ -120,12 +142,13 @@ public class PointServiceTest extends DrawTesting {
 
 
         final List<Team> singleTeams = createSingleTeams(Arrays.asList(teams.get(0).getPlayer1(), teams.get(1).getPlayer2(), teams.get(3).getPlayer1(), teams.get(3).getPlayer2()));
+        singleTeams.forEach(t -> t.setNumberOfMatchesPlayedExcludingWalkOverMatches(3));
         final TreeMap<Integer, List<Team>> teamsSortedBySingleEventResult = new TreeMap<>();
         teamsSortedBySingleEventResult.put(1, Arrays.asList(teamById(singleTeams,4)));
         teamsSortedBySingleEventResult.put(2, Arrays.asList(teamById(singleTeams,3)));
         teamsSortedBySingleEventResult.put(3, Arrays.asList(teamById(singleTeams,1), teamById(singleTeams,2)));
 
-        cut.addEventResultPerPlayer(EventType.SINGLE, Reeks.A_REEKS, teamsSortedBySingleEventResult);
+        cut.addEventResultPerPlayer(Reeks.A_REEKS, teamsSortedBySingleEventResult);
 
         final Map<Player, Integer> pointPerPlayerAfterSingles = cut.getPointPerPlayer();
         MatcherAssert.assertThat("Points should be calculcated correclty.",

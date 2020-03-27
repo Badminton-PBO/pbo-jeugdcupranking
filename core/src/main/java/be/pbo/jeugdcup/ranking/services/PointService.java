@@ -1,7 +1,6 @@
 package be.pbo.jeugdcup.ranking.services;
 
 import be.pbo.jeugdcup.ranking.domain.Event;
-import be.pbo.jeugdcup.ranking.domain.EventType;
 import be.pbo.jeugdcup.ranking.domain.PBOJeugdCupTournament;
 import be.pbo.jeugdcup.ranking.domain.Player;
 import be.pbo.jeugdcup.ranking.domain.Reeks;
@@ -27,11 +26,11 @@ public class PointService {
     }
 
     public void addEventResultPerPlayer(final Event event) {
-        addEventResultPerPlayer(event.getEventType(), event.getReeks(), event.sortTeamsByEventResult());
+        addEventResultPerPlayer(event.getReeks(), event.sortTeamsByEventResult());
     }
 
-    public void addEventResultPerPlayer(final EventType eventType, final Reeks reeks, final SortedMap<Integer, List<Team>> teamsSortedByEventResult) {
-        final Map<Player, Integer> pointPerPlayerForEvent = generatePointPerPlayerForEventResults(eventType, reeks, teamsSortedByEventResult);
+    public void addEventResultPerPlayer(final Reeks reeks, final SortedMap<Integer, List<Team>> teamsSortedByEventResult) {
+        final Map<Player, Integer> pointPerPlayerForEvent = generatePointPerPlayerForEventResults(reeks, teamsSortedByEventResult);
 
         pointPerPlayerForEvent.forEach((p, ppoint) -> {
             pointPerPlayer.compute(p, (player, point) -> {
@@ -47,7 +46,7 @@ public class PointService {
     }
 
 
-    private Map<Player, Integer> generatePointPerPlayerForEventResults(final EventType eventType, final Reeks reeks, final SortedMap<Integer, List<Team>> teamsSortedByEventResult) {
+    private Map<Player, Integer> generatePointPerPlayerForEventResults(final Reeks reeks, final SortedMap<Integer, List<Team>> teamsSortedByEventResult) {
         final Map<Player, Integer> result = new HashMap<>();
         final Long numberOfTeamsInvolved = teamsSortedByEventResult.values().stream().mapToLong(Collection::size).sum();
         if (numberOfTeamsInvolved < 4L) {
@@ -60,9 +59,17 @@ public class PointService {
         teamsSortedByEventResult.keySet().forEach(k -> {
             final int point = k < 21 ? maxPointForThisEvent - ((k - 1) * 5) : 0;
             teamsSortedByEventResult.get(k).stream()
+                    .filter(t -> t.getNumberOfMatchesPlayedExcludingWalkOverMatches() > 0)//A team must have played at least one real match to gain points.
                     .flatMap(t -> Stream.of(t.getPlayer1(), t.getPlayer2()))
                     .filter(Objects::nonNull)
                     .forEach(p -> result.put(p, point));
+
+            teamsSortedByEventResult.get(k).stream()
+                    .filter(t -> t.getNumberOfMatchesPlayedExcludingWalkOverMatches() == 0)
+                    .flatMap(t -> Stream.of(t.getPlayer1(), t.getPlayer2()))
+                    .filter(Objects::nonNull)
+                    .forEach(p -> result.put(p, 0));
+
         });
 
         return result;

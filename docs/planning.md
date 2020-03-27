@@ -57,7 +57,8 @@ Q: nieuwe speler
 Q: onbekende leeftijdscategory
                 
 TODO
-* spelers die niet gespeeld hebben -> geen punten, TDE
+* spelers die niet gespeeld hebben -> geen punten, TDE, done 2020/03/27
+    bv. Renske De Backer, ME U15B, Denderleeuw 2020
 * A/R reeks -> TDE, done 2020/03/25
 * U17-19 category: TDE, done 2020/03/25
 * excel -> TDE, Melanie

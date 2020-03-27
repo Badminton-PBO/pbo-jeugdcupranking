@@ -35,8 +35,7 @@ public class Event {
     private List<EliminationScheme> eliminationSchemes = new ArrayList<>();
 
 
-
-    void init() {
+   public void init() {
         ageCategory = ageCategoryDetector.resolveFromEventName(this.name);
         reeks = reeksDetector.resolveFromEventName(this.name);
     }

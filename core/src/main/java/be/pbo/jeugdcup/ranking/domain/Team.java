@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(builderClassName = "TeamBuilder")
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Team {
@@ -15,6 +15,8 @@ public class Team {
     private int id;
     private Player player1;
     private Player player2;
+    private int numberOfMatchesPlayedExcludingWalkOverMatches = 0;
+
 
     public String toStringShort() {
         final StringBuilder sb = new StringBuilder(id + "(");
@@ -26,4 +28,13 @@ public class Team {
         sb.append(")");
         return sb.toString();
     }
+
+    public void assignMatch(final Match match) {
+        if (!match.isWalkOverMatch()) {
+            synchronized (this) {
+                numberOfMatchesPlayedExcludingWalkOverMatches++;
+            }
+        }
+    }
+
 }

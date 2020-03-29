@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>PBO Jeugdcupranking app</title>
+    <script>
+        console.log("Hello world");
+
+        function upload() {
+            console.log("Need to upload");
+            var fileInput = document.getElementById('the-file');
+            var file = fileInput.files[0];
+            console.log(file.fileName); // "my-holiday-photo.jpg"
+            console.log(file.size); // 1282632
+            console.log(file.type); // image/jpeg
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?isAlwaysUsingDoubleSchemes=true&code=ICBoUZgzRtMy1IFwils/VDqz5vj7IytKifU0vOBi2zTajfGgm1Jsxw==', true);
+            xhr.setRequestHeader("Content-Type", "application/octet-stream");
+
+            xhr.onreadystatechange = function () { // Call a function when the state changes.
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    // Request finished. Do processing here.
+                    console.log("Upload finished");
+                }
+            }
+
+            xhr.send(file); // Simple!
+
+
+        }
+    </script>
+</head>
+<body>
+Upload a TP file for processing
+<form name="form1">
+    <input id="the-file" name="file" type="file"/>
+</form>
+<button type="submit" form="form1" value="Submit" onClick="upload()">Submit</button>
+
+</body>
+</html>

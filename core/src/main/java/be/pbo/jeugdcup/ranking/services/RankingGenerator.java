@@ -9,20 +9,22 @@ import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class RankingGenerator {
     private final Path filePath;
     private final boolean isAlwaysUsingDoubleSchemes;
+    private final TpRepository tpRepository;
 
     public RankingGenerator(final Path filePath, final boolean isAlwaysUsingDoubleSchemes) {
         this.filePath = filePath;
         this.isAlwaysUsingDoubleSchemes = isAlwaysUsingDoubleSchemes;
+        tpRepository = new TpRepositoryImpl(this.filePath);
 
     }
 
     public Map<Player, Integer> generate() {
-        final TpRepository tpRepository = new TpRepositoryImpl(this.filePath);
         final List<Event> events = tpRepository.getEvents();
         final List<Player> players = tpRepository.getPlayers();
         final List<Match> matches = tpRepository.getMatches();
@@ -35,6 +37,19 @@ public class RankingGenerator {
         final Map<Player, Integer> pointPerPlayer = pointService.getPointPerPlayer();
 
         return pointPerPlayer;
+    }
+
+    public String getTournamentNameAndDate() {
+        final Optional<String> tournamentName = tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_NAME);
+        final Optional<String> tournamentDate = tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_DATE);
+
+        return tournamentName.flatMap(s1 ->
+                tournamentDate.map(s2 -> {
+                    final String tournamentNameCleaned = s1.toUpperCase().replace("PBO", "").replace("JEUGDCUPTOUR", "").trim();
+
+                    return tournamentNameCleaned + ", " + s2;
+                })
+        ).orElse("");
     }
 
     public Predicate<Match> matchWithMemberId(final String memberId) {

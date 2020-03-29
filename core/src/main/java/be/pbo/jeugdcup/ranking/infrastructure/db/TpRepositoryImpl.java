@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class TpRepositoryImpl implements TpRepository {
 
     private final Connection connection;
     private final Map<Integer, Player> playerById = new HashMap<>();
+    private final Map<String, String> settingsByKey = new HashMap<>();
     private final Map<Integer, Team> teamById = new HashMap<>();
     private final Map<Integer, Event> eventById = new HashMap<>();
     private final Map<Integer, Draw> drawById = new HashMap<>();
@@ -110,6 +112,19 @@ public class TpRepositoryImpl implements TpRepository {
         }
 
         return result;
+    }
+
+    public Optional<String> getSettingWithName(final String settingName) {
+        if (settingsByKey.isEmpty()) {
+            try (final ResultSet rs = executeSql("SELECT name, value from Settings;")) {
+                while (rs.next()) {
+                    this.settingsByKey.put(rs.getString("name"), rs.getString("value"));
+                }
+            } catch (final SQLException e) {
+                throw new RuntimeException("Unable to get Settings", e);
+            }
+        }
+        return Optional.ofNullable(settingsByKey.get(settingName));
     }
 
     private String buildSet(final ResultSet rs, final String team1ColumnName, final String team2ColumnName) throws SQLException {

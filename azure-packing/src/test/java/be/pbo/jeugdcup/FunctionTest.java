@@ -61,9 +61,9 @@ public class FunctionTest {
         // Verify
         assertEquals(HttpStatus.OK, ret.getStatus());
         final String[] csvLines = ((String) ret.getBody()).split("\\r?\\n");
-        assertEquals("vblId,firstName,lastName,gender,clubName,ageCategory,point", csvLines[0], "Expecting correct header CSV line");
+        assertEquals("vblId,firstName,lastName,gender,clubName,ageCategory,tournament,point", csvLines[0], "Expecting correct header CSV line");
         MatcherAssert.assertThat("A QualificationScheme with 8 teams and 4 matches can be converted into a List of EliminationSchemes",
                 Arrays.asList(csvLines),
-                Matchers.hasItem("50840673,Rafael,Van Den Daele,M,FLEE SHUTTLE BK,U15,55"));
+                Matchers.hasItem("50840673,Rafael,Van Den Daele,M,FLEE SHUTTLE BK,U15,\"VLABAD 2020, 25 jan 2020\",55"));
     }
 }

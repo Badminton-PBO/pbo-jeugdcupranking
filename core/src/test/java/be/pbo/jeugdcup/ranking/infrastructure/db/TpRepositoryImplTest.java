@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TpRepositoryImplTest {
 
@@ -183,6 +182,12 @@ public class TpRepositoryImplTest {
                                                 .build())
                                         .build())
                                 .build())));
+    }
+
+    @Test
+    public void testTournamentName() {
+        MatcherAssert.assertThat(tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_NAME).get(),
+                Matchers.equalTo("PBO-Jeugdcuptour-Lokerse-BC-2019"));
     }
 
 }

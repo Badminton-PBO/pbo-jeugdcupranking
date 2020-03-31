@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Random;
 
@@ -65,7 +67,10 @@ public class Function {
                     .body(resultCSV).build();
 
         } catch (final RuntimeException e) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Unable to generate ranking:" + e).build();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Unable to generate ranking:" + sw.toString()).build();
         }
 
     }
@@ -82,16 +87,20 @@ public class Function {
         resultCSV.append("point");
         resultCSV.append("\r\n");
         for (final Map.Entry<Player, Integer> kvp : playerIntegerMap.entrySet()) {
-            final Player player = kvp.getKey();
-            resultCSV.append(escapeSpecialCharacters(player.getMemberId())).append(",");
-            resultCSV.append(escapeSpecialCharacters(player.getFirstName())).append(",");
-            resultCSV.append(escapeSpecialCharacters(player.getLastName())).append(",");
-            resultCSV.append(escapeSpecialCharacters(player.getGender().getGenderShort())).append(",");
-            resultCSV.append(escapeSpecialCharacters(player.getClubName())).append(",");
-            resultCSV.append(escapeSpecialCharacters(player.getAgeCategory().getKey())).append(",");
-            resultCSV.append(escapeSpecialCharacters(tournamentNameAndDate)).append(",");
-            resultCSV.append(kvp.getValue());
-            resultCSV.append("\r\n");
+            try {
+                final Player player = kvp.getKey();
+                resultCSV.append(escapeSpecialCharacters(player.getMemberId())).append(",");
+                resultCSV.append(escapeSpecialCharacters(player.getFirstName())).append(",");
+                resultCSV.append(escapeSpecialCharacters(player.getLastName())).append(",");
+                resultCSV.append(escapeSpecialCharacters(player.getGender().getGenderShort())).append(",");
+                resultCSV.append(escapeSpecialCharacters(player.getClubName())).append(",");
+                resultCSV.append(escapeSpecialCharacters(player.getAgeCategory().getKey())).append(",");
+                resultCSV.append(escapeSpecialCharacters(tournamentNameAndDate)).append(",");
+                resultCSV.append(kvp.getValue());
+                resultCSV.append("\r\n");
+            } catch (final RuntimeException e) {
+                throw new RuntimeException("Unable to create CSV record for player"+ kvp.getKey(),e);
+            }
         }
         return resultCSV.toString();
     }
@@ -99,6 +108,9 @@ public class Function {
 
     //Don't want to introduce a full blown CSV external lib for writing just a small CSV
     public String escapeSpecialCharacters(String data) {
+        if (data == null) {
+            return "";
+        }
         String escapedData = data.replaceAll("\\R", " ");
         if (data.contains(",") || data.contains("\"") || data.contains("'")) {
             data = data.replace("\"", "\"\"");

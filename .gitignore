@@ -15,8 +15,8 @@ target/
 checkversion.txt
 .attach_pid*
 *.License
-*.TP
-*.tp
+/*.TP
+/*.tp
 **/dependency-reduced-pom.xml
 
 /.direnv

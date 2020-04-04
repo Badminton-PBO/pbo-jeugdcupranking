@@ -2,10 +2,7 @@ package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,6 +30,7 @@ public class PBOJeugdCupTournament {
                     draw.setMatches(matches1);
                     rounds.add(draw);
                 });
+        rounds.forEach(Round::handleMatchesOfTeamsThatGaveUp);
 
         matches.stream()
                 .filter(match -> match.getDraw().getClass().equals(EliminationScheme.class))

@@ -86,7 +86,7 @@ public class TpRepositoryImpl implements TpRepository {
                 + "thematch.team1set2, thematch.team2set2, "
                 + "thematch.team1set3, thematch.team2set3, "
                 + "thematch.matchnr, thematch.roundnr, "
-                + "thematch.draw, thematch.winner, thematch.id " + "FROM PlayerMatch thematch "
+                + "thematch.draw, thematch.winner, thematch.id, thematch.scorestatus " + "FROM PlayerMatch thematch "
                 + "INNER JOIN PlayerMatch AS hometeam ON thematch.van1 = hometeam.planning "
                 + "INNER JOIN PlayerMatch AS awayteam ON thematch.van2 = awayteam.planning "
                 + "AND thematch.draw = hometeam.draw AND thematch.draw = awayteam.draw " + "AND reversehomeaway=FALSE "
@@ -104,6 +104,8 @@ public class TpRepositoryImpl implements TpRepository {
                         .matchnr(rs.getInt("matchnr"))
                         .roundnr(rs.getInt("roundnr"))
                         .id(rs.getInt("id"))
+                        .isWalkOverMatch(rs.getInt("scorestatus") == 1)
+                        .isLostByGivingUp(rs.getInt("scorestatus") == 2)
                         .build();
                 result.add(match);
             }

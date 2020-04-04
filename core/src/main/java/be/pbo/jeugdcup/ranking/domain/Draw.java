@@ -18,6 +18,7 @@ public abstract class Draw {
 
     public List<Match> wonMatchesByTeamX(final Team t) {
         return this.getMatches().stream()
+                .filter(m -> !m.isIgnoreMatchInThisDraw())
                 .filter(m -> t.equals(m.getWinner()))
                 .collect(Collectors.toList());
     }

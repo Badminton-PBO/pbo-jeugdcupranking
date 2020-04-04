@@ -16,6 +16,7 @@ public class Team {
     private Player player1;
     private Player player2;
     private int numberOfMatchesPlayedExcludingWalkOverMatches = 0;
+    private boolean didGaveUp;
 
 
     public String toStringShort() {
@@ -33,6 +34,12 @@ public class Team {
         if (!match.isWalkOverMatch()) {
             synchronized (this) {
                 numberOfMatchesPlayedExcludingWalkOverMatches++;
+            }
+        }
+
+        if (!didGaveUp && match.getLoser().isPresent() && match.getLoser().get().equals(this) && match.isLostByGivingUp()) {
+            synchronized (this) {
+                didGaveUp = true;
             }
         }
     }

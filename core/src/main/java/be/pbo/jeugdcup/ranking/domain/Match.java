@@ -5,6 +5,8 @@ import lombok.Data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +25,7 @@ public class Match {
 
     private static final String NOMATCH = "<Kein Spiel>";
 
-    private final static Pattern PATTERN = Pattern.compile("(\\d+)[-](\\d+)");
+    public final static Pattern SET_PATTERN = Pattern.compile("(\\d+)[-](\\d+)");
 
     private Integer id;
 
@@ -41,11 +43,17 @@ public class Match {
 
     private boolean isWalkOverMatch;
 
+    private boolean isLostByGivingUp;
+
     private int matchnr;
 
     private int roundnr;
 
     private Draw draw;
+
+    private Optional<Team> teamThatGaveUp;
+
+    private boolean ignoreMatchInThisDraw;
 
 
     public static Builder builder() {
@@ -61,7 +69,6 @@ public class Match {
         @Override
         public Match build() {
             final Match match = super.build();
-            match.setIsWalkOverMatch();
             if (match.getTeam1() != null ) {
                 match.getTeam1().assignMatch(match);
             }
@@ -72,30 +79,20 @@ public class Match {
         }
     }
 
-    public Team getWinnerBasedOnSetResults() {
-        final Map<Team, Long> numberOfSetsWonPerTeam = getNumberOfSetsWonPerTeam();
-        final Integer setsWonByTeam1 = numberOfSetsWonPerTeam.getOrDefault(team1, 0L).intValue();
-        final Integer setsWonByTeam2 = numberOfSetsWonPerTeam.getOrDefault(team2, 0L).intValue();
-
-        if (setsWonByTeam1 > setsWonByTeam2) {
-            return team1;
-        } else if (setsWonByTeam1 < setsWonByTeam2) {
-            return team2;
-        } else {
-            throw new IllegalStateException("Unable to detect a winner based on sets for match " + this);
-        }
-    }
-
     private Map<Team, Long> getNumberOfSetsWonPerTeam() {
         return Stream.of(set1, set2, set3)
-                .filter(set -> set != null && PATTERN.matcher(set).matches())
+                .filter(set -> set != null && SET_PATTERN.matcher(set).matches())
                 .map(set -> {
-                    final Matcher matcher = PATTERN.matcher(set);
+                    final Matcher matcher = SET_PATTERN.matcher(set);
                     matcher.matches();
                     int team1points = Integer.parseInt(matcher.group(1));
                     int team2points = Integer.parseInt(matcher.group(2));
+                    if (team1points == 0 && team2points == 0) { // Walkover game
+                        return null;
+                    }
                     return team1points > team2points ? team1 : team2;
                 })
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
@@ -131,9 +128,9 @@ public class Match {
         }
 
         return Stream.of(set1, set2, set3)
-                .filter(set -> set != null && PATTERN.matcher(set).matches())
+                .filter(set -> set != null && SET_PATTERN.matcher(set).matches())
                 .map(set -> {
-                    final Matcher matcher = PATTERN.matcher(set);
+                    final Matcher matcher = SET_PATTERN.matcher(set);
                     matcher.matches();
                     int team1points = Integer.parseInt(matcher.group(1));
                     int team2points = Integer.parseInt(matcher.group(2));
@@ -145,9 +142,8 @@ public class Match {
                 }).mapToInt(Integer::intValue).sum();
     }
 
-    public void setIsWalkOverMatch() {
-        if (team1 != null && team2 != null) {
-            isWalkOverMatch = pointsSaldo(team1) == 0 && pointsSaldo(team2) == 0;
-        }
+    public Optional<Team> getLoser() {
+        return team1.equals(getWinner()) ? Optional.ofNullable(team2) : Optional.ofNullable(team1);
     }
+
 }

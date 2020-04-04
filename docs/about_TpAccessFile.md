@@ -71,6 +71,7 @@
             * ?stage
             * ?matchnr
             * ?roundnr
+            $ scorestatus= 2=opgave, 1=walkover
         * records van1/van2 == null of 0: links naar beide team
             * id
             * entry: Entry.id  (link naar players)

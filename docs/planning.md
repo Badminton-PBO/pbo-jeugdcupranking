@@ -59,10 +59,29 @@ Q: onbekende leeftijdscategory
 TODO
 * spelers die niet gespeeld hebben -> geen punten, TDE, done 2020/03/27
     bv. Renske De Backer, ME U15B, Denderleeuw 2020
-* A/R reeks -> TDE, done 2020/03/25
+* A/B reeks -> TDE, done 2020/03/25
 * U17-19 category: TDE, done 2020/03/25
 * excel -> TDE, Melanie
 * uploadPagina voor in browser: TDE, prio2 
 * hosting bij Azure onder naam van PBO: Stefan, Nathan
 
 Next call: dinsdag 31 maart, 20:30 
+
+Call 31 maart
+* check if isAlwaysUsingDoubleSchemes is still required... A/B reeks will never be used
+  * A: ALS ze in eerste twee tournooien toch met A/B reeks zouden spelen zou dit ook zo gedetecteerd worden en worden puten volgens A/B gemaakt... natuurlijk een grote ALS
+* NP op witwit , done 2020/03/31
+* excel, not always having VBL id --> formules more defensive, done 2020/03/31
+* excel, strict tournament ordering, done 2020/03/31
+  * by adding "01" prefix manually in import + sorting order fixed on tournament
+* check point
+Sander Vandendriessche	Badmintonclub Deinze	50566296, U13, 5de uit poule = 50 punten, WitWit
+Lander Bogaert	WIT-WIT BC	2, U13, vierde uit poule = 55punten ipv. 50, WitWit
+Thomas Devloo	Badmintonclub Deinze	50790927, vierde uit poule, 55 punten ipv. 50
+Iñaki Mahy	Badmintonclub Deinze	51200414, vijfde uit de poule = 50 punten ipv. 45
+Jules Moerman	WIT-WIT BC	51742527, vijfde uit de poule = 50 punten ipv. 45
+
+
+Next call: dinsdag 7 april, 20:30
+
+

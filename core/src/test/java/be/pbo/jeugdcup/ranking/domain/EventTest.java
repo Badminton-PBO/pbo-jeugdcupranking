@@ -18,17 +18,22 @@ import java.util.stream.Collectors;
 public class EventTest {
 
     private static Event event;
-    private static PBOJeugdCupTournament pboJeugdCupTournament;
+    private static PBOJeugdCupTournament pboJeugdCupTournamentVlabad;
+    private static PBOJeugdCupTournament pboJeugdCupTournamentWitWit;
 
     @BeforeAll
     public static void init() throws URISyntaxException {
         final TpRepository tpRepositoryVlabad2020 = new TpRepositoryImpl(Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO-Jeugdcuptour-VLABAD-2020.tp").toURI()));
-        pboJeugdCupTournament = new PBOJeugdCupTournament(tpRepositoryVlabad2020.getPlayers(), tpRepositoryVlabad2020.getEvents(), tpRepositoryVlabad2020.getMatches(), Boolean.TRUE);
+        pboJeugdCupTournamentVlabad = new PBOJeugdCupTournament(tpRepositoryVlabad2020.getPlayers(), tpRepositoryVlabad2020.getEvents(), tpRepositoryVlabad2020.getMatches(), Boolean.TRUE);
+
+        final TpRepository tpRepositoryWitWit2020 = new TpRepositoryImpl(Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBO_Jeugdcuptour_Wit-Wit_2020.tp").toURI()));
+        pboJeugdCupTournamentWitWit = new PBOJeugdCupTournament(tpRepositoryWitWit2020.getPlayers(), tpRepositoryWitWit2020.getEvents(), tpRepositoryWitWit2020.getMatches(), Boolean.TRUE);
+
     }
 
     @Test
     public void sortTeamByEvents_JEU13() {
-        event = pboJeugdCupTournament.getEvents().stream().filter(e -> "JEU13".equals(e.getName())).findAny().get();
+        event = pboJeugdCupTournamentVlabad.getEvents().stream().filter(e -> "JEU13".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
         final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "24(Senne M.)"));
@@ -40,14 +45,14 @@ public class EventTest {
         MatcherAssert.assertThat(collect, Matchers.hasEntry(7, "37(Thomas B.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(8, "1(Emile M.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(9, "67(Maxime T.)"));
-        MatcherAssert.assertThat(collect, Matchers.hasEntry(10, "17(Leon D.),11(Lukas V.),25(Félix V.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(10, "11(Lukas V.),17(Leon D.),25(Félix V.)"));
         MatcherAssert.assertThat(collect, Matchers.hasEntry(11, "22(Jens C.)"));
     }
 
 
     @Test
     public void sortTeamByEvents_MEU15_havingAQualificationScheme() {
-        event = pboJeugdCupTournament.getEvents().stream().filter(e -> "MEU15".equals(e.getName())).findAny().get();
+        event = pboJeugdCupTournamentVlabad.getEvents().stream().filter(e -> "MEU15".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
         final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "44(Lola G.)"));
@@ -62,8 +67,26 @@ public class EventTest {
 
 
     @Test
+    public void sortTeamByEvents_JEU13_19subscriptions() {
+        event = pboJeugdCupTournamentWitWit.getEvents().stream().filter(e -> "JE U13".equals(e.getName())).findAny().get();
+        final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
+        final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "75(Emiel D.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(2, "19(Thijs V.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(3, "30(Senne M.),35(Thomas V.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(4, "22(Kas B.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(5, "56(Jorbe D.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(6, "43(Thomas B.),7(Emile M.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(7, "78(Leon D.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(8, "40(Lukas V.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(9, "20(Bas A.),55(Corneel W.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(10, "27(Thomas D.),37(Xander V.),59(Maxime T.),92(Lander B.)"));
+        MatcherAssert.assertThat(collect, Matchers.hasEntry(11, "50(Iñaki M.),53(Sander V.),79(Jules M.)"));
+    }
+
+    @Test
     public void sortTeamByEvents_MEU13_onlyASingleRound() {
-        event = pboJeugdCupTournament.getEvents().stream().filter(e -> "MEU13".equals(e.getName())).findAny().get();
+        event = pboJeugdCupTournamentVlabad.getEvents().stream().filter(e -> "MEU13".equals(e.getName())).findAny().get();
         final SortedMap<Integer, List<Team>> sortTeamsByEventResult = event.sortTeamsByEventResult();
         final Map<Integer, String> collect = mapToString(sortTeamsByEventResult);
         MatcherAssert.assertThat(collect, Matchers.hasEntry(1, "33(Lente V.)"));
@@ -75,10 +98,8 @@ public class EventTest {
 
     private Map<Integer, String> mapToString(final SortedMap<Integer, List<Team>> sortTeamsByEventResult) {
         final Map<Integer, String> collect = sortTeamsByEventResult.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(Team::toStringShort).collect(Collectors.joining(","))));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(Team::toStringShort).sorted().collect(Collectors.joining(","))));
 
         return collect;
-
-
     }
 }

@@ -20,6 +20,7 @@ public class ReeksDetectorTest {
     public void test() {
         final Map<String, Reeks> expectedResultMap = new HashMap<String, Reeks>() {{
             put("Minibad", Reeks.NA);
+            put("MINIBAD", Reeks.NA);
             put("JE U11", Reeks.NA);
             put("JE U11-U13 A", Reeks.A_REEKS);
             put("JE U15 A", Reeks.A_REEKS);

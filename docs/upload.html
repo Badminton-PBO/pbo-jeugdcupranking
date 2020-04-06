@@ -1,40 +1,122 @@
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>PBO Jeugdcupranking app</title>
-    <script>
-        console.log("Hello world");
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        function upload() {
-            console.log("Need to upload");
-            var fileInput = document.getElementById('the-file');
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>PBO Jeugdcupranking app</title>
+
+</head>
+<body>
+
+
+<div class="container">
+
+    <div class="jumbotron mt-4">
+        <h1 class="display-4">PBO Jeugdcup ranking processor</h1>
+        <p class="lead">Upload a single TP files and receive back the number of PBO Jeugdcupranking points each player
+            is receiving.</p>
+    </div>
+
+    <form id="form1" name="form1">
+        <div class="form-group">
+            <label for="theKey">Security key</label>
+            <input type="text" class="form-control" id="theKey" aria-describedby="keyHelp"
+                   placeholder="Enter security key">
+            <small id="emailHelp" class="form-text text-muted">Protects the PBO-Jeugdcupranking service from
+                un-authorized request.
+            </small>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="isAlwaysUsingDoubleSchemes">
+            <label class="form-check-label" for="isAlwaysUsingDoubleSchemes">Is always using double schemes? (first two
+                tournaments of PBO Jeugdcuptour)</label>
+        </div>
+        <div class="form-group">
+            <label for="theFile">TP file</label>
+            <input type="file" class="form-control" id="theFile" placeholder="Select TP file">
+        </div>
+        <button type="submit" class="btn btn-primary" id="formSubmit">Submit</button>
+    </form>
+
+    <div id="uploading" class="d-flex justify-content-center invisible">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Uploading...</span>
+        </div>
+    </div>
+
+    <div id="result" class="container invisible">
+        <h2>Result</h2>
+        <form id="form-result">
+            <div class="form-group">
+                <label for="resultStatus">POST response code</label>
+                <input type="text" class="form-control" id="resultStatus" aria-describedby="responseCodeHelp">
+                <small id="responseCodeHelp" class="form-text text-muted">(200=OK)
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="resultBody">POST response body</label>
+                <textarea class="form-control" id="resultBody" rows="40" cols="100"></textarea>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#form1").submit(function (event) {
+            event.preventDefault();
+            var fileInput = document.getElementById('theFile');
             var file = fileInput.files[0];
-            console.log(file.fileName); // "my-holiday-photo.jpg"
-            console.log(file.size); // 1282632
-            console.log(file.type); // image/jpeg
+            var key = $("#theKey").val();
+            var isAlwaysUsingDoubleSchemes = $("#isAlwaysUsingDoubleSchemes").prop("checked");
+
+            var params_string = jQuery.param({"isAlwaysUsingDoubleSchemes": isAlwaysUsingDoubleSchemes, "code": key});
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?isAlwaysUsingDoubleSchemes=true&code=ICBoUZgzRtMy1IFwils/VDqz5vj7IytKifU0vOBi2zTajfGgm1Jsxw==', true);
+            xhr.open('POST', 'https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?' + params_string, true);
             xhr.setRequestHeader("Content-Type", "application/octet-stream");
+            $("#uploading").removeClass("invisible");
+            $("#uploading").addClass("visible");
+            $("#formSubmit").attr("disabled", true);
+
 
             xhr.onreadystatechange = function () { // Call a function when the state changes.
-                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    // Request finished. Do processing here.
-                    console.log("Upload finished");
+                if (this.readyState === XMLHttpRequest.DONE) {
+                    // Request finished
+                    $("#uploading").removeClass("visible");
+                    $("#uploading").addClass("invisible");
+                    $("#formSubmit").attr("disabled", false);
+
+                    $("#resultStatus").val(this.status);
+                    $("#resultBody").val(this.responseText);
+                    $("#result").removeClass("invisible");
+                    $("#result").addClass("visible");
                 }
             }
 
-            xhr.send(file); // Simple!
-
-
-        }
-    </script>
-</head>
-<body>
-Upload a TP file for processing
-<form name="form1">
-    <input id="the-file" name="file" type="file"/>
-</form>
-<button type="submit" form="form1" value="Submit" onClick="upload()">Submit</button>
+            xhr.send(file);
+        });
+    });
+</script>
 
 </body>
 </html>

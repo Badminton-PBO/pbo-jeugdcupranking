@@ -12,7 +12,14 @@ mvn clean install
 ```
 
 ## Deployment to Azure
+
 ```
 az login
 mvn -pl azure-packing azure-functions:deploy
 ```
+
+Update CORS settings
+
+In Azure portal
+pbo-jeugdcupranking -> Platform features -> CORS
+Set Allowed Origins to "*", remove all others

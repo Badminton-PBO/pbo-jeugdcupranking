@@ -16,4 +16,6 @@ and returns the PBO Jeugdcup points earned for every player in the tournament.
 curl --request POST --header "Content-Type:application/octet-stream" "https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?isAlwaysUsingDoubleSchemes=true&code=<FUNCTION_KEY>" --data-binary "@PBO-Jeugdcuptour-VLABAD-2020.tp"
 ``` 
 
+Or use the [upload page](https://badminton-pbo.github.io/pbo-jeugdcupranking/upload.html) available on github pages.
+
 

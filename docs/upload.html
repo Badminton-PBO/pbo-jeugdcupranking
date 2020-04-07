@@ -29,7 +29,16 @@
             <input type="text" class="form-control" id="theKey" aria-describedby="keyHelp"
                    placeholder="Enter security key">
             <small id="emailHelp" class="form-text text-muted">Protects the PBO-Jeugdcupranking service from
-                un-authorized request.
+                un-authorized requests.
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="theKey">Tournament sequence number and name</label>
+            <input type="text" class="form-control" id="theTournamentName" aria-describedby="tournamentNameHelp"
+                   placeholder="Enter tournament sequence number and name ex. 02 WitWit">
+            <small id="tournamentNameHelp" class="form-text text-muted">Together with the tournament date extracted from
+                the TP file, this will be used as "tournament" column value in the returned CSV. A sequence number is
+                required to keep the pivot data columns in the excel sorted by occurrence.
             </small>
         </div>
         <div class="form-check">
@@ -87,9 +96,14 @@
             var fileInput = document.getElementById('theFile');
             var file = fileInput.files[0];
             var key = $("#theKey").val();
+            var tournamentName = $("#theTournamentName").val();
             var isAlwaysUsingDoubleSchemes = $("#isAlwaysUsingDoubleSchemes").prop("checked");
 
-            var params_string = jQuery.param({"isAlwaysUsingDoubleSchemes": isAlwaysUsingDoubleSchemes, "code": key});
+            var params_string = jQuery.param({
+                "isAlwaysUsingDoubleSchemes": isAlwaysUsingDoubleSchemes,
+                "code": key,
+                "tournamentSequenceNumberAndName": tournamentName
+            });
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?' + params_string, true);

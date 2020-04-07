@@ -70,6 +70,7 @@ Next call: dinsdag 31 maart, 20:30
 Call 31 maart
 * check if isAlwaysUsingDoubleSchemes is still required... A/B reeks will never be used
   * A: ALS ze in eerste twee tournooien toch met A/B reeks zouden spelen zou dit ook zo gedetecteerd worden en worden puten volgens A/B gemaakt... natuurlijk een grote ALS
+  * A: Nathan, leave the flag. You never know
 * NP op witwit , done 2020/03/31
 * excel, not always having VBL id --> formules more defensive, done 2020/03/31
 * excel, strict tournament ordering, done 2020/03/31
@@ -81,7 +82,9 @@ Thomas Devloo	Badmintonclub Deinze	50790927, vierde uit poule, 55 punten ipv. 50
 Iñaki Mahy	Badmintonclub Deinze	51200414, vijfde uit de poule = 50 punten ipv. 45
 Jules Moerman	WIT-WIT BC	51742527, vijfde uit de poule = 50 punten ipv. 45
 
+dinsdag 7 april, 20:30
+* tournooi naam (+ prefix nummer) meegeven in request, tournooi datum uit TP file halen
+* deployment AZ TODO Thomas
+* ranking check TODO Nathan
 
-Next call: dinsdag 7 april, 20:30
-
-
+next call 14 april, 20:30

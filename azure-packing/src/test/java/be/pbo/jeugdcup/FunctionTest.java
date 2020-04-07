@@ -38,6 +38,7 @@ public class FunctionTest {
 
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("isAlwaysUsingDoubleSchemes", "true");
+        queryParams.put("tournamentSequenceNumberAndName", "01 Vlabad");
         doReturn(queryParams).when(req).getQueryParameters();
 
         final Path tpPath = Paths.get(FunctionTest.class.getResource("/tpFiles/PBO-Jeugdcuptour-VLABAD-2020.tp").toURI());
@@ -64,6 +65,6 @@ public class FunctionTest {
         assertEquals("vblId,firstName,lastName,gender,clubName,ageCategory,tournament,point", csvLines[0], "Expecting correct header CSV line");
         MatcherAssert.assertThat("A QualificationScheme with 8 teams and 4 matches can be converted into a List of EliminationSchemes",
                 Arrays.asList(csvLines),
-                Matchers.hasItem("50840673,Rafael,Van Den Daele,M,FLEE SHUTTLE BK,U15,\"VLABAD 2020, 25 jan 2020\",55"));
+                Matchers.hasItem("50840673,Rafael,Van Den Daele,M,FLEE SHUTTLE BK,U15,\"01 VLABAD, 25 JAN 2020\",55"));
     }
 }

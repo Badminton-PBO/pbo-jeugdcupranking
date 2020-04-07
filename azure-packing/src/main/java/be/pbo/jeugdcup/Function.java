@@ -39,9 +39,13 @@ public class Function {
         if (request.getQueryParameters().get("isAlwaysUsingDoubleSchemes") == null) {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please set query parameter isAlwaysUsingDoubleSchemes").build();
         }
+        if (request.getQueryParameters().get("tournamentSequenceNumberAndName") == null) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please set query parameter tournamentSequenceNumberAndName").build();
+        }
 
         // Parse query parameter
         final Boolean isAlwaysUsingDoubleSchemes = Boolean.valueOf(request.getQueryParameters().get("isAlwaysUsingDoubleSchemes"));
+        final String tournamentSequenceNumberAndName = request.getQueryParameters().get("tournamentSequenceNumberAndName");
         final int bodyLength = request.getBody().length;
 
         final Random rand = new Random();
@@ -58,7 +62,8 @@ public class Function {
         final Map<Player, Integer> playerIntegerMap;
         try {
             playerIntegerMap = rankingGenerator.generate();
-            final String resultCSV = convertToCSVString(playerIntegerMap, rankingGenerator.getTournamentNameAndDate());
+            final String tournamentColumnValue = String.format("%s, %s", tournamentSequenceNumberAndName, rankingGenerator.getTournamentDate()).toUpperCase();
+            final String resultCSV = convertToCSVString(playerIntegerMap, tournamentColumnValue);
 
             return request.createResponseBuilder(HttpStatus.OK)
                     .header("isAlwaysUsingDoubleSchemes", isAlwaysUsingDoubleSchemes.toString())
@@ -67,15 +72,15 @@ public class Function {
                     .body(resultCSV).build();
 
         } catch (final RuntimeException e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
+            final StringWriter sw = new StringWriter();
+            final PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Unable to generate ranking:" + sw.toString()).build();
         }
 
     }
 
-    private String convertToCSVString(final Map<Player, Integer> playerIntegerMap, final String tournamentNameAndDate) {
+    private String convertToCSVString(final Map<Player, Integer> playerIntegerMap, final String tournamentColumnValue) {
         final StringBuilder resultCSV = new StringBuilder();
         resultCSV.append("vblId").append(",");
         resultCSV.append("firstName").append(",");
@@ -95,7 +100,7 @@ public class Function {
                 resultCSV.append(escapeSpecialCharacters(player.getGender().getGenderShort())).append(",");
                 resultCSV.append(escapeSpecialCharacters(player.getClubName())).append(",");
                 resultCSV.append(escapeSpecialCharacters(player.getAgeCategory().getKey())).append(",");
-                resultCSV.append(escapeSpecialCharacters(tournamentNameAndDate)).append(",");
+                resultCSV.append(escapeSpecialCharacters(tournamentColumnValue)).append(",");
                 resultCSV.append(kvp.getValue());
                 resultCSV.append("\r\n");
             } catch (final RuntimeException e) {

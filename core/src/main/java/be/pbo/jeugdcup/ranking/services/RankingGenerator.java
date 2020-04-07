@@ -39,17 +39,10 @@ public class RankingGenerator {
         return pointPerPlayer;
     }
 
-    public String getTournamentNameAndDate() {
-        final Optional<String> tournamentName = tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_NAME);
+    public String getTournamentDate() {
         final Optional<String> tournamentDate = tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_DATE);
 
-        return tournamentName.flatMap(s1 ->
-                tournamentDate.map(s2 -> {
-                    final String tournamentNameCleaned = s1.toUpperCase().replace("PBO", "").replace("JEUGDCUPTOUR", "").trim();
-
-                    return tournamentNameCleaned + ", " + s2;
-                })
-        ).orElse("");
+        return tournamentDate.orElse("");
     }
 
     public Predicate<Match> matchWithMemberId(final String memberId) {

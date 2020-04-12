@@ -35,6 +35,31 @@ public class QualificationSchemeTest extends DrawTesting {
     }
 
 
+
+    @Test
+    public void testConversionWithOddNumberOfTeamsQualificationScheme() {
+        teams = createTeams(7);
+        final QualificationScheme qualificationScheme = createQualificationScheme(1, 2, Arrays.asList(
+                createMatch(1, 2, S21_0, S21_0, null),
+                createMatch(3, 4, S21_0, S21_0, null),
+                createMatch(5, 6, S21_0, S21_0, null),
+                createMatch(null, 7, null, null, null)
+        ));
+        MatcherAssert.assertThat("", qualificationScheme.isValid(), Matchers.equalTo(Boolean.TRUE));
+
+        final List<EliminationScheme> eliminationSchemes = qualificationScheme.convertToEliminationSchemes();
+        final List<String> collect = eliminationSchemes.stream()
+                .map(e -> "eliminationId:" + e.getId() + ", match:" + e.getMatches().stream().map(m -> (m.getTeam1() != null ? m.getTeam1().getId():"null") + "<->" + m.getTeam2().getId()).collect(Collectors.joining()))
+                .collect(Collectors.toList());
+        Collections.sort(collect);
+
+        MatcherAssert.assertThat("A QualificationScheme with 7 teams and 4 matches can be converted into a List of EliminationSchemes",
+                collect,
+                Matchers.contains("eliminationId:1001, match:1<->2",
+                        "eliminationId:1002, match:3<->4",
+                        "eliminationId:1003, match:5<->6"));
+    }
+
     @Test
     public void testConversionWithInValidQualificationScheme() {
         teams = createTeams(8);

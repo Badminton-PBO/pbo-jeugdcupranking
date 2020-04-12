@@ -107,7 +107,7 @@ public class DrawTesting {
                 .build();
     }
 
-    protected Match createMatch(final int team1Id, final int team2Id, final String set1, final String set2, final String set3, final int winnerTeamId, final boolean lostByGivingUp, final boolean isWalkOverMatch) {
+    protected Match createMatch(final Integer team1Id, final Integer team2Id, final String set1, final String set2, final String set3, final int winnerTeamId, final boolean lostByGivingUp, final boolean isWalkOverMatch) {
         final Match match = Match.builder()
                 .team1(teamById(team1Id))
                 .team2(teamById(team2Id))
@@ -123,14 +123,20 @@ public class DrawTesting {
     }
 
 
-    protected Match createMatch(final int team1Id, final int team2Id, final String set1, final String set2, final String set3) {
+    protected Match createMatch(final Integer team1Id, final Integer team2Id, final String set1, final String set2, final String set3) {
         final int winnerTeamId = getWinnerBasedOnSetResults(team1Id, team2Id, set1, set2, set3);
         final Match match = createMatch(team1Id, team2Id, set1, set2, set3, winnerTeamId, false, false);
         return match;
     }
 
     //VisibleForTesting
-    private int getWinnerBasedOnSetResults(final int team1Id, final int team2Id, final String set1, final String set2, final String set3) {
+    private int getWinnerBasedOnSetResults(final Integer team1Id, final Integer team2Id, final String set1, final String set2, final String set3) {
+        if (team1Id == null ) {
+            return team2Id;
+        }
+        if (team2Id == null ) {
+            return team1Id;
+        }
         final Map<Integer, Long> numberOfSetsWonPerTeam = getNumberOfSetsWonPerTeam(team1Id, team2Id, set1, set2, set3);
         final Integer setsWonByTeam1 = numberOfSetsWonPerTeam.getOrDefault(team1Id, 0L).intValue();
         final Integer setsWonByTeam2 = numberOfSetsWonPerTeam.getOrDefault(team2Id, 0L).intValue();
@@ -144,7 +150,7 @@ public class DrawTesting {
         }
     }
 
-    private Map<Integer, Long> getNumberOfSetsWonPerTeam(final int team1Id, final int team2Id, final String set1, final String set2, final String set3) {
+    private Map<Integer, Long> getNumberOfSetsWonPerTeam(final Integer team1Id, final Integer team2Id, final String set1, final String set2, final String set3) {
         return Stream.of(set1, set2, set3)
                 .filter(set -> set != null && Match.SET_PATTERN.matcher(set).matches())
                 .map(set -> {
@@ -180,7 +186,10 @@ public class DrawTesting {
         return eliminationScheme;
     }
 
-    protected Team teamById(final int i) {
+    protected Team teamById(final Integer i) {
+        if (i == null) {
+            return null;
+        }
         return teams.stream().filter(t -> t.getId() == i).findFirst().get();
     }
 

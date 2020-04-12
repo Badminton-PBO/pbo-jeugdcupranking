@@ -143,7 +143,11 @@ public class Match {
     }
 
     public Optional<Team> getLoser() {
-        return team1.equals(getWinner()) ? Optional.ofNullable(team2) : Optional.ofNullable(team1);
+        return team1 != null && team1.equals(getWinner()) ? Optional.ofNullable(team2) : Optional.ofNullable(team1);
+    }
+
+    public boolean isPlayed() {
+        return set1 != null;
     }
 
 }

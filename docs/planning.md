@@ -83,8 +83,14 @@ Iñaki Mahy	Badmintonclub Deinze	51200414, vijfde uit de poule = 50 punten ipv. 
 Jules Moerman	WIT-WIT BC	51742527, vijfde uit de poule = 50 punten ipv. 45
 
 dinsdag 7 april, 20:30
-* tournooi naam (+ prefix nummer) meegeven in request, tournooi datum uit TP file halen
+* tournooi naam (+ prefix nummer) meegeven in request, tournooi datum uit TP file halen, done 2020/04/07
 * deployment AZ TODO Thomas
 * ranking check TODO Nathan
+* bugfix NP team1=null op QualificationScheme
 
-next call 14 april, 20:30
+14 april, 20:30
+* hertesten 2019 na bugfix Nathan
+* geen lidnummer => 99041412  999 + "month/day"-TP file + uniek 3 cijferig nummer binnen TPfile, Thomas, done 2020/04/14
+
+next call 21 april, 20:30
+

@@ -10,7 +10,7 @@ public class Startup {
 
     public static void main(final String[] args)  {
 
-        final Path path = Paths.get("C:\\checkouts\\pbo-jeugdcupranking\\PBO_JEUGDCUPTOUR_BC_DENDERLEEUW_2019.tp");
+        final Path path = Paths.get("C:\\checkouts\\pbo-jeugdcupranking\\PBO_Jeugdcup_De_Mintons_2019.tp");
         final RankingGenerator rankingGenerator = new RankingGenerator(path, false);
         final Map<Player, Integer> results = rankingGenerator.generate();
 

@@ -16,13 +16,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 /**
  * Azure Functions with HTTP Trigger.
  */
 public class Function {
+
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     /**
      * This function listens at endpoint "/api/HttpTrigger-Java". Two ways to invoke it using "curl" command in bash:
      * 1. curl -d "HTTP Body" {your host}/api/HttpTrigger-Java&code={your function key}
@@ -62,7 +68,11 @@ public class Function {
         final Map<Player, Integer> playerIntegerMap;
         try {
             playerIntegerMap = rankingGenerator.generate();
-            final String tournamentColumnValue = String.format("%s, %s", tournamentSequenceNumberAndName, rankingGenerator.getTournamentDate()).toUpperCase();
+            final Optional<LocalDate> tournamentDate = rankingGenerator.getTournamentDate();
+            final String tournamentColumnValue = String.format("%s, %s",
+                    tournamentSequenceNumberAndName,
+                    tournamentDate.map(localDate -> localDate.format(dateTimeFormatter)).orElse(""))
+                    .toUpperCase();
             final String resultCSV = convertToCSVString(playerIntegerMap, tournamentColumnValue);
 
             return request.createResponseBuilder(HttpStatus.OK)

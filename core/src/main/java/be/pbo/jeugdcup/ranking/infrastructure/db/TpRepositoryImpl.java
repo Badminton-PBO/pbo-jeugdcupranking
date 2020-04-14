@@ -18,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class TpRepositoryImpl implements TpRepository {
     private final Map<Integer, Team> teamById = new HashMap<>();
     private final Map<Integer, Event> eventById = new HashMap<>();
     private final Map<Integer, Draw> drawById = new HashMap<>();
+    private Optional<LocalDate> tournamentDate = Optional.empty();
 
     public TpRepositoryImpl(final Path filePath) {
         try {
@@ -128,6 +130,20 @@ public class TpRepositoryImpl implements TpRepository {
         }
         return Optional.ofNullable(settingsByKey.get(settingName));
     }
+
+    @Override
+    public Optional<LocalDate> getTournamentDay() {
+
+        try (final ResultSet rs = executeSql("SELECT tournamentday from TournamentDay where id = 1;")) {
+            while (rs.next()) {
+                this.tournamentDate = Optional.of(rs.getDate("tournamentday").toLocalDate());
+            }
+        } catch (final SQLException e) {
+            throw new RuntimeException("Unable to get TournamentDay", e);
+        }
+        return this.tournamentDate;
+    }
+
 
     private String buildSet(final ResultSet rs, final String team1ColumnName, final String team2ColumnName) throws SQLException {
         final int homePoints = rs.getInt(team1ColumnName);

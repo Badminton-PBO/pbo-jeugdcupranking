@@ -4,12 +4,12 @@ import be.pbo.jeugdcup.ranking.domain.Draw;
 import be.pbo.jeugdcup.ranking.domain.Event;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface TpRepository {
     public String TOURNAMENT_NAME_SETTING_NAME = "Tournament";
-    public String TOURNAMENT_NAME_SETTING_DATE = "TournamentDate";
 
     List<Event> getEvents();
 
@@ -20,4 +20,6 @@ public interface TpRepository {
     List<Match> getMatches();
 
     Optional<String> getSettingWithName(String settingName);
+
+    Optional<LocalDate> getTournamentDay();
 }

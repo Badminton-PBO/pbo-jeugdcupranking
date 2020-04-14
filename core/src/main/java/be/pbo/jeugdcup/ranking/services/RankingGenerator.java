@@ -7,6 +7,7 @@ import be.pbo.jeugdcup.ranking.domain.Player;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepository;
 import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryImpl;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,20 +30,18 @@ public class RankingGenerator {
         final List<Player> players = tpRepository.getPlayers();
         final List<Match> matches = tpRepository.getMatches();
 
-        final PBOJeugdCupTournament pboJeugdCupTournament = new PBOJeugdCupTournament(players, events, matches, isAlwaysUsingDoubleSchemes);
+        final PBOJeugdCupTournament pboJeugdCupTournament = new PBOJeugdCupTournament(players, events, matches, isAlwaysUsingDoubleSchemes, tpRepository.getTournamentDay().orElse(null));
         final PointService pointService = new PointService(pboJeugdCupTournament);
 
-        events.forEach(e -> pointService.addEventResultPerPlayer(e));
+        events.forEach(pointService::addEventResultPerPlayer);
 
         final Map<Player, Integer> pointPerPlayer = pointService.getPointPerPlayer();
 
         return pointPerPlayer;
     }
 
-    public String getTournamentDate() {
-        final Optional<String> tournamentDate = tpRepository.getSettingWithName(TpRepository.TOURNAMENT_NAME_SETTING_DATE);
-
-        return tournamentDate.orElse("");
+    public Optional<LocalDate> getTournamentDate() {
+        return  tpRepository.getTournamentDay();
     }
 
     public Predicate<Match> matchWithMemberId(final String memberId) {

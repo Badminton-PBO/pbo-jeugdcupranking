@@ -1,12 +1,17 @@
 package be.pbo.jeugdcup.ranking.domain;
 
 import lombok.Data;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Data
 public class PBOJeugdCupTournament {
+
+    private final DateTimeFormatter monthDayDateTimeFormatter = DateTimeFormatter.ofPattern("MMdd");
 
     private final List<Round> rounds = new ArrayList<>();
     private final List<EliminationScheme> eliminationSchemes = new ArrayList<>();
@@ -15,11 +20,23 @@ public class PBOJeugdCupTournament {
     private final List<Player> players;
     private final List<Event> events;
     private final boolean isAlwaysUsingDoubleSchemes;
+    private final AtomicInteger memberIdCounter = new AtomicInteger(1);
+    private final LocalDate tournamentDate;
 
-    public PBOJeugdCupTournament(final List<Player> players, final List<Event> events, final List<Match> matches, final boolean isAlwaysUsingDoubleSchemes) {
+    public PBOJeugdCupTournament(final List<Player> players, final List<Event> events,
+                                 final List<Match> matches,
+                                 final boolean isAlwaysUsingDoubleSchemes) {
+        this(players, events, matches, isAlwaysUsingDoubleSchemes, null);
+    }
+
+    public PBOJeugdCupTournament(final List<Player> players, final List<Event> events,
+                                 final List<Match> matches,
+                                 final boolean isAlwaysUsingDoubleSchemes,
+                                 final LocalDate tournamentDate) {
         this.players = players;
         this.events = events;
         this.isAlwaysUsingDoubleSchemes = isAlwaysUsingDoubleSchemes;
+        this.tournamentDate = tournamentDate;
 
 
         matches.stream()
@@ -57,6 +74,21 @@ public class PBOJeugdCupTournament {
             e.setRounds(this.getRounds(e));
             e.setEliminationSchemes(this.getEliminationSchemes(e));
         });
+
+        players.stream()
+                .filter(p -> p.getMemberId() == null || p.getMemberId().isEmpty())
+                .forEach(p -> p.setMemberId(generateCustomerMemberId(tournamentDate)));
+    }
+
+    private String generateCustomerMemberId(final LocalDate tournamentDate) {
+        final String suffix = "" + memberIdCounter.getAndIncrement();
+        final StringBuilder sb = new StringBuilder("99");
+        sb.append(tournamentDate != null ? tournamentDate.format(monthDayDateTimeFormatter) : "0000");
+        sb.append("00".substring(suffix.length()));
+        sb.append(suffix);
+
+
+        return sb.toString();
     }
 
     public List<Round> getRounds(final Event event) {
@@ -77,4 +109,5 @@ public class PBOJeugdCupTournament {
                 .collect(Collectors.toList());
 
     }
+
 }

@@ -267,15 +267,19 @@ public class TpRepositoryImpl implements TpRepository {
             final Player player2 = playerById.get(resultSet.getInt("player2_id"));
 
             final AgeCategory ageCategory = drawById.get(resultSet.getInt("draw_id")).getEvent().getAgeCategory();
-            if (ageCategory != null && ageCategory != AgeCategory.UNKNOWN) {
-                player1.setAgeCategory(ageCategory);
-                if (player2 != null) {
-                    player2.setAgeCategory(ageCategory);
-                }
-            }
+            setAgeCategoryIfHavingALowerIndex(player1, ageCategory);
+            setAgeCategoryIfHavingALowerIndex(player2, ageCategory);
 
             currentTeam.setPlayer1(player1);
             currentTeam.setPlayer2(player2);
+        }
+    }
+
+    private void setAgeCategoryIfHavingALowerIndex(final Player player, final AgeCategory ageCategory) {
+        if (player != null && ageCategory != null) {
+            if (ageCategory.getIndex() < player.getAgeCategory().getIndex()) {
+                player.setAgeCategory(ageCategory);
+            }
         }
     }
 

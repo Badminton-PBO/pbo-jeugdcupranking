@@ -20,6 +20,7 @@ public class AgeCategoryDetectorTest {
     public void test() {
         final Map<String, AgeCategory> expectedResultMap = new HashMap<String, AgeCategory>() {{
             put("Minibad", AgeCategory.MINIBAD);
+            put("Minibad + U11", AgeCategory.UNKNOWN);
             put("JE U11", AgeCategory.U11);
             put("JE U15", AgeCategory.U15);
             put("JE U17", AgeCategory.U17U19);
@@ -29,6 +30,11 @@ public class AgeCategoryDetectorTest {
             put("JE U11-U13 A", AgeCategory.UNKNOWN);
             put("JE U15 A", AgeCategory.U15);
             put("JE U15 A-reeks", AgeCategory.U15);
+            put("ME U11 + U13", AgeCategory.UNKNOWN);
+            put("ME U21", AgeCategory.UNKNOWN);
+            put("ME U11 + U21", AgeCategory.UNKNOWN);
+            put("ME U17-U19", AgeCategory.U17U19);
+            put("ME U15 + U17", AgeCategory.UNKNOWN);
         }};
 
         expectedResultMap.forEach((eventName, ageCategory) ->

@@ -89,11 +89,17 @@ dinsdag 7 april, 20:30
 * bugfix NP team1=null op QualificationScheme
 
 14 april, 20:30
-* hertesten 2019 na bugfix Nathan
+* hertesten 2019 na bugfix, Nathan
 * deployment AZ TODO Thomas
-* geen lidnummer => 99041412  999 + "month/day"-TP file + uniek 3 cijferig nummer binnen TPfile, Thomas, done 2020/04/14
+* geen lidnummer => 99041412  99 + "month/day"-TP file + uniek  cijferig nummer binnen TPfile, Thomas, done 2020/04/14
 * chose "lowest" AgeCategory if players plays multiple events with different AgeCategories (ex "JE U13" & "JD U15" --> AgeCategory = U13)
 * improve AgeCategeory detection from event name: look for ALL "minibad" and "U\d\d"  and only then make a statement
 
-next call 21 april, 20:30
+5 mei, 20:30
+* deployment AZ TODO Thomas
+* voorstel striktere naming convention op events, Thomas 
+* docu afwerken / doorsturen, Nathan
+
+
+
 

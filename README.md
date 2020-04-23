@@ -10,12 +10,10 @@ utility can help with this process.
 A Java8 app that runs in AzureCloud using AzureFunctions that is processing a single TP file 
 and returns the PBO Jeugdcup points earned for every player in the tournament.
 
-## Usage when deployent in AzureFunctions
-```
-# Example usage for first two tournaments where A/B reeks is not being used
-curl --request POST --header "Content-Type:application/octet-stream" "https://pbo-jeugdcupranking.azurewebsites.net/api/pboJeugdcupRanking?isAlwaysUsingDoubleSchemes=true&code=<FUNCTION_KEY>" --data-binary "@PBO-Jeugdcuptour-VLABAD-2020.tp"
-``` 
+## Quick start
+ * Use the [upload page](https://badminton-pbo.github.io/pbo-jeugdcupranking/upload) available on github pages to upload an process a TP file
+ * Include the returnd CSV into the PBO Juegdcupranking excel file
 
-Or use the [upload page](https://badminton-pbo.github.io/pbo-jeugdcupranking/upload.html) available on github pages.
-
+## Usage
+[howto](https://badminton-pbo.github.io/pbo-jeugdcupranking/howto)
 

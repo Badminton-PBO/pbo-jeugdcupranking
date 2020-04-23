@@ -1,0 +1,14 @@
+@startuml
+actor PBO_JEUGD_VERANTWOORDELIJKE
+database excel
+participant PBO_JEUGDCUP_PROCESSOR
+
+loop na elk PBO jeugdcup toernooi
+PBO_JEUGD_VERANTWOORDELIJKE -> PBO_JEUGDCUP_PROCESSOR: 1/ Upload TP file
+PBO_JEUGDCUP_PROCESSOR -> PBO_JEUGD_VERANTWOORDELIJKE: 2/ Download CSV lijst met punten
+PBO_JEUGD_VERANTWOORDELIJKE -> excel: 3/ voeg CSV toe in "data" tab, refresh data
+PBO_JEUGD_VERANTWOORDELIJKE -> excel: 4/ corrigeer leeftijdscategorie van spelers met "UNKNOWN" leeftijdscategorie
+PBO_JEUGD_VERANTWOORDELIJKE -> excel: 5/ corrigeer spelers zonder lidnummer
+PBO_JEUGD_VERANTWOORDELIJKE -> excel: 6/ exporteer naar PDF + publiceer
+end
+@enduml

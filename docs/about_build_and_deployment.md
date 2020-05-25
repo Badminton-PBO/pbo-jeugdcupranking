@@ -13,13 +13,18 @@ mvn clean install
 
 ## Deployment to Azure
 
+### Run mvn plugin
 ```
 az login
 mvn -pl azure-packing azure-functions:deploy
 ```
 
-Update CORS settings
-
+#### Update CORS settings using Azure portal
 In Azure portal
 pbo-jeugdcupranking -> Platform features -> CORS
 Set Allowed Origins to "*", remove all others
+(Or just allow https://badminton-pbo.github.io)
+
+#### Fetch security key needed to call the function
+Using Azure portal
+"Resource Group = pbo-jeugdcupranking" > "App service = pbo-jeugdcupranking" > "functions = pboJeugdcupRanking" > function keys

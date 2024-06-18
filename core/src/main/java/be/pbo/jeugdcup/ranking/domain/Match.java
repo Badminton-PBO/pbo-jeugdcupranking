@@ -55,6 +55,8 @@ public class Match {
 
     private boolean ignoreMatchInThisDraw;
 
+    private Date planDate;
+
 
     public static Builder builder() {
         return new Builder();

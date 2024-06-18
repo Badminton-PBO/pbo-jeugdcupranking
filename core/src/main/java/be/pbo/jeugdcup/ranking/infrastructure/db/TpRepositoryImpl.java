@@ -13,11 +13,7 @@ import be.pbo.jeugdcup.ranking.domain.Round;
 import be.pbo.jeugdcup.ranking.domain.Team;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,11 +24,11 @@ import java.util.Optional;
 public class TpRepositoryImpl implements TpRepository {
 
     private final Connection connection;
-    private final Map<Integer, Player> playerById = new HashMap<>();
+    final Map<Integer, Player> playerById = new HashMap<>();
     private final Map<String, String> settingsByKey = new HashMap<>();
-    private final Map<Integer, Team> teamById = new HashMap<>();
+    final Map<Integer, Team> teamById = new HashMap<>();
     private final Map<Integer, Event> eventById = new HashMap<>();
-    private final Map<Integer, Draw> drawById = new HashMap<>();
+    final Map<Integer, Draw> drawById = new HashMap<>();
     private Optional<LocalDate> tournamentDate = Optional.empty();
 
     public TpRepositoryImpl(final Path filePath) {
@@ -145,7 +141,7 @@ public class TpRepositoryImpl implements TpRepository {
     }
 
 
-    private String buildSet(final ResultSet rs, final String team1ColumnName, final String team2ColumnName) throws SQLException {
+    String buildSet(final ResultSet rs, final String team1ColumnName, final String team2ColumnName) throws SQLException {
         final int homePoints = rs.getInt(team1ColumnName);
         final int awayPoints = rs.getInt(team2ColumnName);
         String result = null;
@@ -245,7 +241,7 @@ public class TpRepositoryImpl implements TpRepository {
     }
 
 
-    private void fillTeams() {
+    void fillTeams() {
         final ResultSet resultSet = executeSql("SELECT DISTINCT Entry.player1 player1_id, Entry.player2 player2_id, entry.id team_id, Draw.id draw_id "
                 + "FROM Draw INNER JOIN PlayerMatch ON Draw.id = PlayerMatch.draw "
                 + "INNER JOIN Entry ON PlayerMatch.entry = Entry.id;");

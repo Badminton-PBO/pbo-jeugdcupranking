@@ -1,5 +1,6 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
+import be.pbo.jeugdcup.ranking.domain.EventNameWithDate;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
 
@@ -81,10 +82,10 @@ public class TpRepositoryCardImpl extends TpRepositoryImpl {
                             result.computeIfPresent(player, (k, v) ->  {
                                 EventNameWithDate eventNameWithDate = new EventNameWithDate(match.getDraw().getEvent().getName(), match.getPlanDate());
 
-                                Optional<EventNameWithDate> existingEventWithSameName = v.stream().filter(x -> x.eventName.equals(eventNameWithDate.eventName)).findFirst();
+                                Optional<EventNameWithDate> existingEventWithSameName = v.stream().filter(x -> x.getEventName().equals(eventNameWithDate.getEventName())).findFirst();
                                 if (!existingEventWithSameName.isPresent()) {
                                     v.add(eventNameWithDate);
-                                } else if (eventNameWithDate.date.before(existingEventWithSameName.get().date)) {
+                                } else if (eventNameWithDate.getDate().before(existingEventWithSameName.get().getDate())) {
                                     existingEventWithSameName.get().setDate(eventNameWithDate.getDate());
                                 }
                                 return v;
@@ -97,42 +98,4 @@ public class TpRepositoryCardImpl extends TpRepositoryImpl {
        return result;
     }
 
-    public class EventNameWithDate {
-        private String eventName;
-        private Date date;
-
-        public EventNameWithDate(String eventName, Date date) {
-            this.eventName = eventName;
-            this.date = date;
-        }
-
-        public String getEventName() {
-            return eventName;
-        }
-
-        public void setEventName(String eventName) {
-            this.eventName = eventName;
-        }
-
-        public Date getDate() {
-            return date;
-        }
-
-        public void setDate(Date date) {
-            this.date = date;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            EventNameWithDate that = (EventNameWithDate) o;
-            return Objects.equals(eventName, that.eventName) && Objects.equals(date, that.date);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(eventName, date);
-        }
-    }
 }

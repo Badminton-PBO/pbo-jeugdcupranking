@@ -1,7 +1,9 @@
 package be.pbo.jeugdcup.ranking.infrastructure.db;
 
+import be.pbo.jeugdcup.ranking.domain.EventNameWithDate;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.services.CardRenderingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TpRepositoryCardImplTest {
 
@@ -25,8 +28,15 @@ public class TpRepositoryCardImplTest {
     public void testPocBK() {
         List<Match> m = tpRepository.getMatches();
 
-        Map<Player, List<TpRepositoryCardImpl.EventNameWithDate>> result = tpRepository.getFirstMatchPerPlayerPerEventType(m);
-        System.out.println(result);
+        Map<Player, List<EventNameWithDate>> result = tpRepository.getFirstMatchPerPlayerPerEventType(m);
+        int i = 0;
+
+
+        Map.Entry<Player, List<EventNameWithDate>> ex1 = result.entrySet().stream().collect(Collectors.toList()).get(0);
+        new CardRenderingService().renderCard(ex1.getKey(), ex1.getValue().get(0));
+
+
+        //System.out.println(result);
     }
 
 

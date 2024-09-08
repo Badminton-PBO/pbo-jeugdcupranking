@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>BK Card template</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>Name</td>
+        <td>${player.firstName} ${player.lastName} (${player.memberId})</td>
+    </tr>
+    <tr>
+        <td>Club</td>
+        <td>${player.clubName}</td>
+    </tr>
+    <tr>
+        <td>First game</td>
+        <td>${firstMatch.eventName} @ ${firstMatch.date?datetime}</td>
+    </tr>
+</table>
+</body>
+</html>

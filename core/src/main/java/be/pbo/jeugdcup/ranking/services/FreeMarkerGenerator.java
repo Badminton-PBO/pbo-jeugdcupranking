@@ -9,6 +9,7 @@ import freemarker.template.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -22,11 +23,10 @@ public class FreeMarkerGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public FreeMarkerGenerator(Player player, EventNameWithDate firstMatch) {
+    public FreeMarkerGenerator(List<CardPlayer> cardPlayers) {
         @SuppressWarnings("rawtypes")
         Map root = new HashMap();
-        root.put("player", player);
-        root.put("firstMatch", firstMatch);
+        root.put("cardPlayers", cardPlayers);
         this.setRoot(root);
         setupConfig();
     }

@@ -80,7 +80,7 @@ public class TpRepositoryCardImpl extends TpRepositoryImpl {
                        .forEach(player -> {
                             result.computeIfAbsent(player, k -> new ArrayList<>());
                             result.computeIfPresent(player, (k, v) ->  {
-                                EventNameWithDate eventNameWithDate = new EventNameWithDate(match.getDraw().getEvent().getName(), match.getPlanDate());
+                                EventNameWithDate eventNameWithDate = new EventNameWithDate(match.getDraw().getEvent().getName(), match.getPlanDate(), match);
 
                                 Optional<EventNameWithDate> existingEventWithSameName = v.stream().filter(x -> x.getEventName().equals(eventNameWithDate.getEventName())).findFirst();
                                 if (!existingEventWithSameName.isPresent()) {

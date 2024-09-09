@@ -10,14 +10,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public class CardRenderingService {
 
 
-    public void renderCard(Player player, EventNameWithDate firstMatch) {
+    public void renderCards(List<CardPlayer> cardPlayers) {
 
         try (OutputStream os = new FileOutputStream("out.pdf")) {
-            FreeMarkerGenerator templateEngine = new FreeMarkerGenerator(player, firstMatch);
+            FreeMarkerGenerator templateEngine = new FreeMarkerGenerator(cardPlayers);
             String html = templateEngine.generateHTML("cardTemplate.html");
 
             PdfRendererBuilder builder = new PdfRendererBuilder();

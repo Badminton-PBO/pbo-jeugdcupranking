@@ -6,18 +6,25 @@
 </head>
 <body>
 <table>
-    <tr>
-        <td>Name</td>
-        <td>${player.firstName} ${player.lastName} (${player.memberId})</td>
-    </tr>
-    <tr>
-        <td>Club</td>
-        <td>${player.clubName}</td>
-    </tr>
-    <tr>
-        <td>First game</td>
-        <td>${firstMatch.eventName} @ ${firstMatch.date?datetime}</td>
-    </tr>
+<#list cardPlayers as cardPlayer>
+
+        <tr>
+            <td>Name</td>
+            <td>${cardPlayer.player.firstName} ${cardPlayer.player.lastName} (${cardPlayer.player.memberId})</td>
+        </tr>
+        <tr>
+            <td>Club</td>
+            <td>${cardPlayer.player.clubName}</td>
+        </tr>
+        <#list cardPlayer.firstMatchPerEventType as firstMatch>
+        <tr>
+            <td>${firstMatch.eventName}</td>
+            <td>${firstMatch.date?datetime}:  ${firstMatch.teamVsTeamVisual()}  </td>
+        </tr>
+        </#list>
+
+</#list>
 </table>
+
 </body>
 </html>

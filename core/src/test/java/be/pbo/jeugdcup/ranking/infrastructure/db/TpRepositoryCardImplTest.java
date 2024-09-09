@@ -3,6 +3,7 @@ package be.pbo.jeugdcup.ranking.infrastructure.db;
 import be.pbo.jeugdcup.ranking.domain.EventNameWithDate;
 import be.pbo.jeugdcup.ranking.domain.Match;
 import be.pbo.jeugdcup.ranking.domain.Player;
+import be.pbo.jeugdcup.ranking.services.CardPlayer;
 import be.pbo.jeugdcup.ranking.services.CardRenderingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ public class TpRepositoryCardImplTest {
 
     @BeforeAll
     public static void init() throws URISyntaxException {
+        // https://www.toernooi.nl/tournament/2492F915-3372-422B-BE35-579E1AF9B639
         final Path path = Paths.get(TpRepositoryImpl.class.getResource("/tpFiles/PBOJeugdcupBCDePluimplukkers2024Voor.tp").toURI());
         tpRepository = new TpRepositoryCardImpl(path);
     }
@@ -32,8 +34,12 @@ public class TpRepositoryCardImplTest {
         int i = 0;
 
 
-        Map.Entry<Player, List<EventNameWithDate>> ex1 = result.entrySet().stream().collect(Collectors.toList()).get(0);
-        new CardRenderingService().renderCard(ex1.getKey(), ex1.getValue().get(0));
+        //Map.Entry<Player, List<EventNameWithDate>> ex1 = result.entrySet().stream().collect(Collectors.toList()).get(0);
+        List<CardPlayer> cardPlayers = result.entrySet().stream()
+                .map(e -> new CardPlayer(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+
+        new CardRenderingService().renderCards(cardPlayers);
 
 
         //System.out.println(result);

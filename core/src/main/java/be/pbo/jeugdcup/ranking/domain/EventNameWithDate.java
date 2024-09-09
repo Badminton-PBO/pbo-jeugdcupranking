@@ -12,4 +12,9 @@ import java.util.Date;
 public class EventNameWithDate {
     private String eventName;
     private Date date;
+    private Match match;
+
+    public String teamVsTeamVisual() {
+        return match.getTeam1().toStringVisual() + " vs " + match.getTeam2().toStringVisual();
+    }
 }

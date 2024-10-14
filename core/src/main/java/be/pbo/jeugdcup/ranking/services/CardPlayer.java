@@ -14,4 +14,11 @@ import java.util.List;
 public class CardPlayer {
     private Player player;
     private List<EventNameWithDate> firstMatchPerEventType;
+    private int partitionId=0;
+    private int boxId=0;
+
+    public String uniqueId() {
+        return partitionId + "-" + boxId;
+    }
+
 }

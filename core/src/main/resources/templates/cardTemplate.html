@@ -1,30 +1,196 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>BK Card template</title>
+    <style>
+        body {
+            margin: 0
+        }
+
+        .sheet-outer {
+            margin: 0;
+        }
+
+        .sheet-outer.A4 .sheet {
+            width: 210mm;
+            height: 296mm
+        }
+
+        .sheet.padding-5mm {
+            padding: 5mm
+        }
+
+        .sheet {
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
+
+        @media screen {
+            body {
+                background: #e0e0e0
+            }
+
+            .sheet {
+                background: white;
+                box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+                margin: 5mm auto;
+            }
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 95%;
+        }
+
+        .box {
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .person-photo-table {
+            width: 100%;
+            table-layout: fixed;
+        }
+        .person-identification  {
+            width:60%;
+            font-size: 20px;
+            vertical-align: text-top;
+        }
+        .person-photo  {
+            width:40%
+        }
+        .person-photo img {
+            max-width:100%;
+            max-height:100%;
+        }
+        .first-matches-table {
+            width: 100%;
+        }
+
+        .pp-qr-table {
+            width: 100%;
+        }
+        .sponsors-table {
+            width: 100%;
+            border-top: 1px solid black;
+        }
+        .my-qrcode {
+            float: right;
+        }
+
+        .clubname {
+            font-size: 12px;
+        }
+        .player-eventname, .player-date {
+            vertical-align: text-top;
+        }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+    </script>
+
 </head>
 <body>
-<table>
-<#list cardPlayers as cardPlayer>
+    <div class="sheet-outer A4">
+        <#list cardPlayers as cardPlayer>
+            <#if cardPlayer.boxId == 1>
+                <section class="sheet padding-5mm">
+                    <div class="container">
+            </#if>
+                    <div class="box">
+                        <#if cardPlayer.partitionId gt 0>
+                            <div>
+                            <h1 class="card-title">BK JEUGD NOV '24</h1>
+                            <table class="person-photo-table">
+                                <tr>
+                                    <td class="person-identification">
+                                        <div>${cardPlayer.player.firstName}</div><!-- ${cardPlayer.player.memberId} -->
+                                        <div>${cardPlayer.player.lastName}</div>
+                                        <div class="clubname">${cardPlayer.player.clubName}</div>
+                                    </td>
+                                    <td class="person-photo">
+                                        <img src="https://content.tournamentsoftware.com/images/profile/638D0B55-C39B-43AB-8A9D-D50D62017FBE/xlarge/0C539667-DBF0-4C8E-B124-DF7CF229D1E9.jpg?v=20200920104152"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="first-matches-table">
 
-        <tr>
-            <td>Name</td>
-            <td>${cardPlayer.player.firstName} ${cardPlayer.player.lastName} (${cardPlayer.player.memberId})</td>
-        </tr>
-        <tr>
-            <td>Club</td>
-            <td>${cardPlayer.player.clubName}</td>
-        </tr>
-        <#list cardPlayer.firstMatchPerEventType as firstMatch>
-        <tr>
-            <td>${firstMatch.eventName}</td>
-            <td>${firstMatch.date?datetime}:  ${firstMatch.teamVsTeamVisual()}  </td>
-        </tr>
+                                <#list cardPlayer.firstMatchPerEventType as firstMatch>
+                                <tr>
+                                    <td class="player-eventname">${firstMatch.eventName}</td>
+                                    <td class="player-date">${firstMatch.date?string["EEE HH:mm"]}</td>
+                                    <td>
+                                        <#list firstMatch.oppositeTeamPlayers(cardPlayer.player.memberId) as oppositePlayer>
+                                            <div>${oppositePlayer.firstName} ${oppositePlayer.lastName}</div>
+                                        </#list>
+                                    </td>
+                                </tr>
+                                </#list>
+                            </table>
+                            </div>
+
+                            <div>
+                                <table class="pp-qr-table">
+                                    <tr>
+                                        <td>
+                                            <img src="./pluimplukkersLogo.jpg"/>
+                                        </td>
+                                        <td style="text-align: right">
+                                            <div id="qrcode-${cardPlayer.uniqueId()}" class="my-qrcode"></div>
+                                        </td>
+                                        <script type="text/javascript">
+                                            new QRCode(document.getElementById("qrcode-${cardPlayer.uniqueId()}"), {
+                                                text: "https://www.toernooi.nl/player-profile/0C539667-DBF0-4C8E-B124-DF7CF229D1E9",
+                                                width: 128,
+                                                height: 128,
+                                                colorDark : "#000000",
+                                                colorLight : "#ffffff",
+                                                correctLevel : QRCode.CorrectLevel.H
+                                            });
+                                        </script>
+                                    </tr>
+                                </table>
+                                <table class="sponsors-table">
+                                    <tr>
+                                        <td><img src="./pluimplukkersLogo.jpg"/></td>
+                                        <td><img src="./pluimplukkersLogo.jpg"/></td>
+                                        <td><img src="./pluimplukkersLogo.jpg"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+
+                        </#if>
+
+                    </div>
+            <#if cardPlayer.boxId == 4>
+                    </div>
+                </section>
+            </#if>
+
+
         </#list>
 
-</#list>
-</table>
+    </div>
 
 </body>
 </html>

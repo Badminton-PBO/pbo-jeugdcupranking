@@ -1,15 +1,11 @@
 package be.pbo.jeugdcup.ranking.services;
 
-import be.pbo.jeugdcup.ranking.domain.EventNameWithDate;
-import be.pbo.jeugdcup.ranking.domain.Player;
-import be.pbo.jeugdcup.ranking.infrastructure.db.TpRepositoryCardImpl;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import freemarker.template.TemplateException;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class CardRenderingService {
@@ -17,17 +13,10 @@ public class CardRenderingService {
 
     public void renderCards(List<CardPlayer> cardPlayers) {
 
-        try (OutputStream os = new FileOutputStream("out.pdf")) {
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream("out.html"))) {
             FreeMarkerGenerator templateEngine = new FreeMarkerGenerator(cardPlayers);
             String html = templateEngine.generateHTML("cardTemplate.html");
-
-            PdfRendererBuilder builder = new PdfRendererBuilder();
-            builder.useFastMode();
-            //String htmlTemplateUri = CardRenderingService.class.getResource("/cardTemplate.html").toURI().toString();
-            //builder.withUri(htmlTemplateUri);
-            builder.withHtmlContent(html, null);
-            builder.toStream(os);
-            builder.run();
+            pw.println(html);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

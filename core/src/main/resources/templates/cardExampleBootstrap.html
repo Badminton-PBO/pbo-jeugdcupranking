@@ -81,17 +81,17 @@
         }
         .first-matches-table {
             width: 100%;
+            border: 1px solid black;
+        }
+        .first-matches-table tr{
+            border: 1px solid black;
+        }
+        .first-matches-table td {
+            padding: 5px;
         }
 
-        .pp-qr-table {
-            width: 100%;
-        }
-        .sponsors-table {
-            width: 100%;
-            /* border-top: 1px solid black; */
-        }
         .my-qrcode {
-            float: right;
+            float: left;
         }
 
     </style>
@@ -104,65 +104,68 @@
         <section class="sheet padding-xmm">
             <div class="container-self">
                 <div class="box card rounded-0">
-                    <div class="card-body">
-                        <h5 class="card-title">BK JEUGD NOV '24</h5>
+                    <div class="card-body" style="padding: 2px">
+                        <h5 class="card-title">
+                            <div class="container" style="padding-left: 0px; padding-right: 0px">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div id="qrcode-1" class="my-qrcode mb-2"></div>
+                                        <script type="text/javascript">
+                                            new QRCode(document.getElementById("qrcode-1"), {
+                                                text: "https://www.toernooi.nl/sport/player.aspx?id=3fd9ba05-5d0f-4a79-a52d-71d3f38c8331&player=85",
+                                                width: 64,
+                                                height: 64,
+                                                colorDark : "#000000",
+                                                colorLight : "#ffffff",
+                                                correctLevel : QRCode.CorrectLevel.H
+                                            });
+                                        </script>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="pt-2" style="font-size: 30px">BK JEUGD 2024</div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </h5>
                         <table class="person-photo-table">
                             <tr>
                                 <td class="person-identification">
                                     <div>Marie</div>
                                     <div>Dekeyser</div>
-                                    <div>Pluimplukkers</div>
+                                    <div>BC Pluimplukkers</div>
                                 </td>
                                 <td class="person-photo">
                                     <img src="https://content.tournamentsoftware.com/images/profile/638D0B55-C39B-43AB-8A9D-D50D62017FBE/xlarge/0C539667-DBF0-4C8E-B124-DF7CF229D1E9.jpg?v=20200920104152"/>
                                 </td>
                             </tr>
                         </table>
-                        <table class="first-matches-table">
+                        <table class="first-matches-table mt-3">
                             <tr>
-                                <td>ME U17+U19</td>
-                                <td>13:20:00</td>
+                                <td>ME U17</td>
+                                <td>13:20</td>
                                 <td>Julie Laporte</td>
                             </tr>
-                            <!--tr>
-                                <td>MD U17+U19</td>
-                                <td>13:20:00</td>
+                            <tr>
+                                <td>MD U17</td>
+                                <td>15:20</td>
                                 <td>Julie Laporte <br>Amélie Moresmo</td>
-                            </tr-->
-                        </table>
-
-                        <table class="pp-qr-table">
-                            <tr>
-                                <td>
-                                    <img src="./pluimplukkersLogo.jpg"/>
-                                </td>
-                                <td style="text-align: rightx">
-                                    <div id="qrcode-1" class="my-qrcode"></div>
-                                </td>
-                                <script type="text/javascript">
-                                    new QRCode(document.getElementById("qrcode-1"), {
-                                        text: "https://www.toernooi.nl/player-profile/0C539667-DBF0-4C8E-B124-DF7CF229D1E9",
-                                        width: 64,
-                                        height: 64,
-                                        colorDark : "#000000",
-                                        colorLight : "#ffffff",
-                                        correctLevel : QRCode.CorrectLevel.H
-                                    });
-                                </script>
                             </tr>
                         </table>
-
-
-
                     </div>
-                    <div class="card-footer text-body-secondary bg-body" style="padding:0">
-                        <table class="sponsors-table">
-                            <tr>
-                                <td><img src="./pluimplukkersLogo.jpg"/></td>
-                                <td><img src="./pluimplukkersLogo.jpg"/></td>
-                                <td><img src="./pluimplukkersLogo.jpg"/></td>
-                            </tr>
-                        </table>
+
+                    <div class="card-footer text-body-secondary bg-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <img src="./bvl_logo_64x64.png"/>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <img src="./pp_clublogo_zwart_64x100.jpg"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

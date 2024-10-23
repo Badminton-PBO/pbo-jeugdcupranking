@@ -46,9 +46,9 @@
             display: grid;
             grid-template-rows: 1fr 1fr;
             grid-template-columns: 1fr 1fr;
-            gap: 5px;
+            gap: 8px;
             /* padding: 20px; */
-            height: 95%;
+            height: 100%;
         }
 
         .box {
@@ -141,7 +141,8 @@
                                         <div>${cardPlayer.player.clubName}</div>
                                     </td>
                                     <td class="person-photo">
-                                        <img src="https://content.tournamentsoftware.com/images/profile/638D0B55-C39B-43AB-8A9D-D50D62017FBE/xlarge/0C539667-DBF0-4C8E-B124-DF7CF229D1E9.jpg?v=20200920104152"/>
+                                        <img src="./pics/${cardPlayer.player.memberId}.jpg" onerror="this.style.display='none'"/>
+                                        <!--<img src="Error.src" onerror="this.src='fallback-img.jpg'"/>-->
                                     </td>
                                 </tr>
                             </table>

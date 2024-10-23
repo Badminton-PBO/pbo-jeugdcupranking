@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardPlayer {
+public class CardPlayer implements Comparable<CardPlayer> {
     private Player player;
     private List<EventNameWithDate> firstMatchPerEventType;
     private int partitionId=0;
@@ -21,4 +21,8 @@ public class CardPlayer {
         return partitionId + "-" + boxId;
     }
 
+    @Override
+    public int compareTo(CardPlayer o) {
+        return this.player.getMemberId().compareTo(o.player.getMemberId());
+    }
 }

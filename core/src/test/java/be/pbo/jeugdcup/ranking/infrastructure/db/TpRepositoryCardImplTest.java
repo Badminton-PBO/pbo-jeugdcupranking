@@ -12,6 +12,7 @@ import org.mockito.internal.util.collections.ListUtil;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,6 +39,8 @@ public class TpRepositoryCardImplTest {
         List<CardPlayer> cardPlayers = result.entrySet().stream()
                 .map(e -> new CardPlayer(e.getKey(), e.getValue(),0,0))
                 .collect(Collectors.toList());
+
+        Collections.sort(cardPlayers);
 
         int partitionSize = 4;
 

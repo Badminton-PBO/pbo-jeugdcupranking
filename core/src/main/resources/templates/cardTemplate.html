@@ -52,7 +52,7 @@
         }
 
         .box {
-            background-color: #f2f2f2;
+            /* background-color: #f2f2f2; */
             border: 1px solid #ccc;
             padding: 5px;
         }
@@ -141,7 +141,7 @@
                                         <div>${cardPlayer.player.clubName}</div>
                                     </td>
                                     <td class="person-photo">
-                                        <img src="./pics/${cardPlayer.player.memberId}.jpg" onerror="this.style.display='none'"/>
+                                        <img src="./pics/players/${cardPlayer.player.memberId}.jpg" onerror="this.style.display='none'"/>
                                         <!--<img src="Error.src" onerror="this.src='fallback-img.jpg'"/>-->
                                     </td>
                                 </tr>
@@ -165,10 +165,10 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6 text-center">
-                                        <img src="./bvl_logo_64x64.png"/>
+                                        <img src="./pics/bvl_logo_64x64.png"/>
                                     </div>
                                     <div class="col-6 text-center">
-                                        <img src="./pp_clublogo_zwart_64x100.jpg"/>
+                                        <img src="./pics/pp_clublogo_zwart_64x100.jpg"/>
                                     </div>
                                 </div>
                             </div>
@@ -178,6 +178,16 @@
 
                     </div>
             <#if cardPlayer.boxId == 4>
+                    </div>
+                </section>
+
+                <!-- sponsor pagina -->
+                <section class="sheet padding-xmm">
+                    <div class="container-self">
+                        <div class="box"><img src="./pics/SponsorsA6.jpg" width="385" height="547"></div>
+                        <div class="box"><img src="./pics/SponsorsA6.jpg" width="385" height="547"></div>
+                        <div class="box"><img src="./pics/SponsorsA6.jpg" width="385" height="547"></div>
+                        <div class="box"><img src="./pics/SponsorsA6.jpg" width="385" height="547"></div>
                     </div>
                 </section>
             </#if>
